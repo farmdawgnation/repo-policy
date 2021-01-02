@@ -1,5 +1,6 @@
 package me.frmr.github.repopolicy.core
 
+import com.charleskorn.kaml.Yaml
 import me.frmr.github.repopolicy.core.model.*
 import me.frmr.github.repopolicy.core.parser.PolicyDataFile
 import me.frmr.github.repopolicy.core.parser.PolicyParser
@@ -17,6 +18,8 @@ class PolicyEngine(val policy: PolicyDescription) {
   private lateinit var githubClient: GitHub
 
   constructor(dataFile: PolicyDataFile) : this(PolicyParser.parseDataFile(dataFile))
+
+  constructor(yaml: String): this(Yaml.default.decodeFromString(PolicyDataFile.serializer(), yaml))
 
   /**
    * Init the GitHub Client from environment variables. Specifically:
