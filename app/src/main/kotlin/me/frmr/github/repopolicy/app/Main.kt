@@ -1,23 +1,29 @@
 package me.frmr.github.repopolicy.app
 
 import java.util.concurrent.Callable
+import picocli.CommandLine
 import picocli.CommandLine.*
+import java.nio.file.Path
+import kotlin.system.exitProcess
 
 @Command(name="repo-policy", mixinStandardHelpOptions = true, version=["1.0"],
     description=["Validates or enforces a repo policy against GitHub repos"])
-class AppMain: Callable<Int> {
+class Main: Callable<Int> {
   enum class Mode{
     validate, enforce
   }
 
-  @Parameters(airty="1")
+  @Parameters(index="0", arity="1",
+    description = ["Run mode. Valid options: \${COMPLETION-CANDIDATES}"])
   lateinit var mode: Mode
+
+  @Parameters(index="1", arity = "1",
+    description = ["YAML Policy file to run against GitHub"])
+  lateinit var policyFile: Path;
+
   override fun call(): Int {
     TODO("Not yet implemented")
   }
 }
 
-
-fun main() {
-  // TODO: Implement
-}
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(Main()).execute(*args))

@@ -14,5 +14,5 @@ tasks.test {
 }
 
 application {
-    mainClass.set("me.frmr.github.repopolicy.app.Main")
+    mainClass.set("me.frmr.github.repopolicy.app.MainKt")
 }
