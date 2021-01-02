@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation("info.picocli:picocli:4.6.0")
 }
 

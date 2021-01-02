@@ -1,8 +1,10 @@
 package me.frmr.github.repopolicy.app
 
+import me.frmr.github.repopolicy.core.PolicyEngine
 import java.util.concurrent.Callable
 import picocli.CommandLine
 import picocli.CommandLine.*
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.system.exitProcess
 
@@ -22,7 +24,16 @@ class Main: Callable<Int> {
   lateinit var policyFile: Path;
 
   override fun call(): Int {
-    TODO("Not yet implemented")
+    println("Parsing policy file...")
+    val file = Files.readString(policyFile)
+    val engine = PolicyEngine(file)
+    engine.initGithubClient()
+
+    when (mode) {
+      Mode.enforce -> engine.enforce()
+      Mode.validate -> engine.validate()
+    }
+    return 0
   }
 }
 
