@@ -10,11 +10,11 @@ class VisibilityOperator(private val requiredVisibility: String): PolicyRuleOper
 
   override fun validate(target: GHRepository): PolicyValidationResult {
     return if (requiredVisibility == "private" && !target.isPrivate) {
-      PolicyValidationResult("Repository visibility", "Repository was public when should be private", false, null)
+      PolicyValidationResult(target.fullName, "Repository was public when should be private", false, null)
     } else if (requiredVisibility == "public" && target.isPrivate) {
-      PolicyValidationResult("Repository visibility", "Repository was private when should be public", false, null)
+      PolicyValidationResult(target.fullName, "Repository was private when should be public", false, null)
     } else {
-      PolicyValidationResult("Repository Visibility", "OK", passed = true, null)
+      PolicyValidationResult(target.fullName, "OK", passed = true, null)
     }
   }
 
@@ -22,10 +22,10 @@ class VisibilityOperator(private val requiredVisibility: String): PolicyRuleOper
     val validationResult = validate(target)
 
     return if (validationResult.passed) {
-      PolicyEnforcementResult("Repository visibility", "Nothing to do",true, false, null)
+      PolicyEnforcementResult(target.fullName, "Nothing to do",true, false, null)
     } else {
       val updatedDescription = validationResult.description + " – This rule will not change visibility to correct this issue"
-      PolicyEnforcementResult("Repository visibility", updatedDescription,false, false, null)
+      PolicyEnforcementResult(target.fullName, updatedDescription,false, false, null)
     }
   }
 }

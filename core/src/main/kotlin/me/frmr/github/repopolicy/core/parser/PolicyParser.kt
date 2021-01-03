@@ -33,7 +33,7 @@ object PolicyParser {
   }
 
   private fun parseRule(input: PolicyRule): ModelPolicyRule {
-    val subjectMatchers = PolicySubjectMatchers(input.owner, input.topic)
+    val subjectMatchers = PolicySubjectMatchers(user = input.user, topic = input.topic, org = input.org)
     return ModelPolicyRule(
       subjectMatchers,
       createRepoOperators(input.repo)

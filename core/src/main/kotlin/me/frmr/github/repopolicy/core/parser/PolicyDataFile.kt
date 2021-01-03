@@ -61,20 +61,21 @@ data class PolicyRuleRepoFeatures(
 
 @Serializable
 data class PolicyRuleRepo(
-  val license_key: String?,
-  val delete_branch_on_merge: Boolean?,
-  val visibility: String?,
-  val features: PolicyRuleRepoFeatures?,
-  val default_branch: String?,
-  val collaborators: List<String>?
+  val license_key: String? = null,
+  val delete_branch_on_merge: Boolean? = null,
+  val visibility: String? = null,
+  val features: PolicyRuleRepoFeatures? = null,
+  val default_branch: String? = null,
+  val collaborators: List<String>? = null
 )
 
 @Serializable
 data class PolicyRule(
-  val owner: String?,
-  val topic: String?,
-  val repo: PolicyRuleRepo?,
-  val branches: List<PolicyRuleBranch>?
+  val user: String? = null,
+  val org: String? = null,
+  val topic: String? = null,
+  val repo: PolicyRuleRepo? = null,
+  val branches: List<PolicyRuleBranch>? = null
 )
 
 @Serializable

@@ -29,11 +29,16 @@ class Main: Callable<Int> {
     val engine = PolicyEngine(file)
     engine.initGithubClient()
 
-    when (mode) {
-      Mode.enforce -> engine.enforce()
-      Mode.validate -> engine.validate()
+    println(engine.policy)
+
+    // Explicitly declared for clarity on what our
+    // exit code means
+    println("Running policy engine...")
+    val fails = when (mode) {
+      Mode.enforce -> PolicyEnforcementReporter.report(engine.enforce())
+      Mode.validate -> PolicyValidationReporter.report(engine.validate())
     }
-    return 0
+    return fails
   }
 }
 

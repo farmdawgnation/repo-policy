@@ -36,10 +36,23 @@ class PolicyEngine(val policy: PolicyDescription) {
    * Use the github client to find repos matching a subject matcher
    */
   private fun findMatchingRepos(subject: PolicySubjectMatchers): PagedSearchIterable<GHRepository>? {
-    return githubClient.searchRepositories()
-      .topic(subject.topic)
-      .user(subject.owner)
-      .list()
+    var searchRequest = githubClient.searchRepositories()
+
+    var q = ""
+
+    if (subject.topic != null) {
+      q += "topic:${subject.topic} "
+    }
+
+    if (subject.user != null) {
+      q += "user:${subject.user} "
+    }
+
+    if (subject.org != null) {
+      q += "org:${subject.org} "
+    }
+
+    return searchRequest.q(q).list()
   }
 
   /**

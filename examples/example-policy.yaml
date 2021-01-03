@@ -5,7 +5,7 @@ version: 1.0
 author: Engineering Leaders <eng-leaders@example.org>
 # Rules associated with the policy
 rules:
-- owner: ExampleOrg
+- org: ExampleOrg
   topic: example-topic
   # Rules match on a topic set on the repository and apply repo
   # and branch settings. You can omit the topic parameter or set

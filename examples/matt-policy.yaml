@@ -1,0 +1,8 @@
+---
+name: Matt's Personal Policy
+version: 1.0
+author: Matt Farmer <redacted@frmr.me>
+rules:
+- user: farmdawgnation
+  repo:
+    visibility: public
