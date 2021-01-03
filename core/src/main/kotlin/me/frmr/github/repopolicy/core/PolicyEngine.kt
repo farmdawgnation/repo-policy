@@ -62,8 +62,10 @@ class PolicyEngine(val policy: PolicyDescription) {
     return policy.rules.flatMap { rule ->
       val repos = findMatchingRepos(rule.subject) ?: emptyList()
       repos.flatMap { repo ->
+        // Get the full repo — search results are abbreviated
+        val fullRepo = githubClient.getRepository(repo.fullName)
         rule.operators.map { operator ->
-          operator.validate(repo)
+          operator.validate(fullRepo)
         }
       }
     }
