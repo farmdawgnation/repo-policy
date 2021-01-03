@@ -12,5 +12,5 @@ data class PolicyValidationResult(
   val subject: String,
   val description: String,
   val passed: Boolean,
-  val extra: String?
+  val extra: String? = null
 )

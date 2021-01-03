@@ -10,6 +10,18 @@ class LicenseOperator(val license: String): NonEnforcingOperator() {
   override val description: String = "License"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
-    TODO("Not yet implemented")
+    return if (target.license.key == license) {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "License matches",
+        passed = true
+      )
+    } else {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "License was ${target.license}, needed $license.",
+        passed = false
+      )
+    }
   }
 }
