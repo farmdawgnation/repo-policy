@@ -6,3 +6,7 @@ rules:
 - user: farmdawgnation
   repo:
     visibility: public
+    features:
+      wiki: false
+      issues: true
+      projects: false

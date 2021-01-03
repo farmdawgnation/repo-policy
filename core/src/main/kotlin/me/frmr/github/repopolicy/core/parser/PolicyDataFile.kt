@@ -53,10 +53,9 @@ data class PolicyRuleBranch(
 
 @Serializable
 data class PolicyRuleRepoFeatures(
-  val issues: Boolean?,
-  val projects: Boolean?,
-  val wiki: Boolean?,
-  val vulnerability_alerts: Boolean?
+  val issues: Boolean? = null,
+  val projects: Boolean? = null,
+  val wiki: Boolean? = null
 )
 
 @Serializable

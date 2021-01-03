@@ -28,8 +28,8 @@ object PolicyParser {
 
     if (input?.features != null) {
       resultingOperators.add(FeaturesOperator(
-        input.features.projects,
         input.features.issues,
+        input.features.projects,
         input.features.wiki
       ))
     }
