@@ -4,10 +4,7 @@ import me.frmr.github.repopolicy.core.model.PolicyRule as ModelPolicyRule
 import me.frmr.github.repopolicy.core.model.PolicyDescription
 import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicySubjectMatchers
-import me.frmr.github.repopolicy.core.operators.repo.DefaultBranchOperator
-import me.frmr.github.repopolicy.core.operators.repo.DeleteBranchOnMergeOperator
-import me.frmr.github.repopolicy.core.operators.repo.LicenseOperator
-import me.frmr.github.repopolicy.core.operators.repo.VisibilityOperator
+import me.frmr.github.repopolicy.core.operators.repo.*
 
 object PolicyParser {
   private fun createRepoOperators(input: PolicyRuleRepo?): List<PolicyRuleOperator> {
@@ -27,6 +24,14 @@ object PolicyParser {
 
     if (input?.default_branch != null) {
       resultingOperators.add(DefaultBranchOperator(input.default_branch))
+    }
+
+    if (input?.features != null) {
+      resultingOperators.add(FeaturesOperator(
+        input.features.projects,
+        input.features.issues,
+        input.features.wiki
+      ))
     }
 
     return resultingOperators
