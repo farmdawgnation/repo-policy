@@ -50,6 +50,34 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
   }
 
   override fun enforce(target: GHRepository): PolicyEnforcementResult {
-    TODO("Not yet implemented")
+    val validationResult = validate(target)
+
+    return if (validationResult.passed) {
+      PolicyEnforcementResult(
+        subject = target.fullName,
+        description = "Nothing to do",
+        passedValidation = true,
+        policyEnforced = false
+      )
+    } else {
+      if (wikiEnabled != null) {
+        target.enableWiki(wikiEnabled)
+      }
+
+      if (issuesEnabled != null) {
+        target.enableIssueTracker(issuesEnabled)
+      }
+
+      if (projectsEnabled != null) {
+        target.enableProjects(projectsEnabled)
+      }
+
+      PolicyEnforcementResult(
+        subject = target.fullName,
+        description = "Settings updated",
+        passedValidation = false,
+        policyEnforced = true
+      )
+    }
   }
 }

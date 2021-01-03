@@ -13,5 +13,5 @@ data class PolicyEnforcementResult(
   val description: String,
   val passedValidation: Boolean,
   val policyEnforced: Boolean,
-  val extra: String?
+  val extra: String? = null
 )
