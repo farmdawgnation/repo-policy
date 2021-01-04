@@ -7,6 +7,9 @@ rules:
   topic: testing-repo-policy
   repo:
     visibility: private
+    delete_branch_on_merge: true
+    collaborators:
+    - farmdawgnation
     features:
       wiki: false
       issues: true

@@ -34,9 +34,9 @@ object PolicyParser {
       ))
     }
 
-    if (input?.delete_branch_on_merge != null) {
-      resultingOperators.add(DeleteBranchOnMergeOperator(
-        input.delete_branch_on_merge
+    if (input?.collaborators != null) {
+      resultingOperators.add(CollaboratorsOperator(
+        input.collaborators
       ))
     }
 
