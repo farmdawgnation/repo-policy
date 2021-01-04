@@ -83,8 +83,13 @@ class PolicyEngine(val policy: PolicyDescription) {
     return policy.rules.flatMap { rule ->
       val repos = findMatchingRepos(rule.subject) ?: emptyList()
       repos.flatMap { repo ->
-        rule.operators.map { operator ->
-          operator.enforce(repo)
+        // Determine if the repo is archived, if so, skip it
+        if (repo.isArchived) {
+          emptyList()
+        } else {
+          rule.operators.map { operator ->
+            operator.enforce(repo)
+          }
         }
       }
     }

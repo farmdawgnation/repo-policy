@@ -4,8 +4,9 @@ version: 1.0
 author: Matt Farmer <redacted@frmr.me>
 rules:
 - user: farmdawgnation
+  topic: testing-repo-policy
   repo:
-    visibility: public
+    visibility: private
     features:
       wiki: false
       issues: true
