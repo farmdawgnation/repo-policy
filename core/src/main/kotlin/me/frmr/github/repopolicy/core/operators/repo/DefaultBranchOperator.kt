@@ -10,6 +10,18 @@ class DefaultBranchOperator(val defaultBranch: String): NonEnforcingOperator() {
   override val description: String = "Default branch name"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
-    TODO("Not yet implemented")
+    return if (target.defaultBranch == defaultBranch) {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "Default branch is $defaultBranch",
+        passed = true
+      )
+    } else {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "Default branch is ${target.defaultBranch}, should be $defaultBranch",
+        passed = false
+      )
+    }
   }
 }
