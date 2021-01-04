@@ -37,7 +37,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
     return if (passedValidation) {
       PolicyValidationResult(
         target.fullName,
-        "Passed Validation",
+        "Enabled features match policy",
         true
       )
     } else {
@@ -55,7 +55,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
     return if (validationResult.passed) {
       PolicyEnforcementResult(
         subject = target.fullName,
-        description = "Nothing to do",
+        description = "Enabled features match policy",
         passedValidation = true,
         policyEnforced = false
       )
@@ -74,7 +74,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
 
       PolicyEnforcementResult(
         subject = target.fullName,
-        description = "Settings updated",
+        description = "Enabled feature settings updated",
         passedValidation = false,
         policyEnforced = true
       )

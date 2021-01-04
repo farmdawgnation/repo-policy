@@ -15,7 +15,7 @@ class VisibilityOperator(private val requiredVisibility: String): NonEnforcingOp
     } else if (requiredVisibility == "public" && target.isPrivate) {
       PolicyValidationResult(target.fullName, "Repository was private when should be public", false, null)
     } else {
-      PolicyValidationResult(target.fullName, "OK", passed = true, null)
+      PolicyValidationResult(target.fullName, "Repository Visibility OK", passed = true, null)
     }
   }
 }

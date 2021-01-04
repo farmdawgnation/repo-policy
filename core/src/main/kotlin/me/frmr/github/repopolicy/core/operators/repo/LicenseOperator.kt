@@ -13,7 +13,7 @@ class LicenseOperator(val license: String): NonEnforcingOperator() {
     return if (target.license.key == license) {
       PolicyValidationResult(
         subject = target.fullName,
-        description = "License matches",
+        description = "License check matches",
         passed = true
       )
     } else {
