@@ -9,10 +9,40 @@ class DeleteBranchOnMergeOperator(val enabled: Boolean): PolicyRuleOperator {
   override val description: String = "Delete branch on merge"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
-    TODO("Not yet implemented")
+    return if (target.isDeleteBranchOnMerge == enabled) {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "Delete branch on merge matches policy",
+        passed = true
+      )
+    } else {
+      PolicyValidationResult(
+        subject = target.fullName,
+        description = "Delete branch ${target.isDeleteBranchOnMerge}, should be $enabled",
+        passed = false
+      )
+    }
   }
 
   override fun enforce(target: GHRepository): PolicyEnforcementResult {
-    TODO("Not yet implemented")
+    val validationResult = validate(target)
+
+    if (validationResult.passed) {
+      return PolicyEnforcementResult(
+        subject = target.fullName,
+        description = validationResult.description,
+        passedValidation = true,
+        policyEnforced = false
+      )
+    }
+
+    target.deleteBranchOnMerge(enabled)
+
+    return PolicyEnforcementResult(
+      subject = target.fullName,
+      description = "Delete branch on merge set to $enabled",
+      passedValidation = false,
+      policyEnforced = true
+    )
   }
 }
