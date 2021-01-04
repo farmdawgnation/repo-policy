@@ -23,7 +23,7 @@ data class PolicyRuleRequiredPullRequestReviews(
   val dismiss_stale_reviews: Boolean?,
   val require_code_owner_reviews: Boolean?,
   val required_approving_review_count: Int?,
-  val dissmissal_restrictions: PolicyRuleRequiredPullRequestReviewsDismissalRestrictions?,
+  val dismissal_restrictions: PolicyRuleRequiredPullRequestReviewsDismissalRestrictions?,
   val push_restrictions: PolicyRuleRequiredPullRequestReviewsPushRestrictions?
 )
 

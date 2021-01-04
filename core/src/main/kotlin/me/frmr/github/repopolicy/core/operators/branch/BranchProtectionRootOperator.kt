@@ -5,7 +5,13 @@ import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 
-class BranchProtectionRootOperator: PolicyRuleOperator {
+class BranchProtectionRootOperator(
+  val branch: String,
+  val enabled: Boolean,
+  val requireLinearHistory: Boolean?,
+  val allowForcePushes: Boolean?,
+  val allowDeletions: Boolean?
+): PolicyRuleOperator {
   override val description: String = "Branch protection"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
