@@ -10,7 +10,7 @@ class LicenseOperator(val license: String): NonEnforcingOperator() {
   override val description: String = "License"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
-    return if (target.license.key == license) {
+    return if (target.license?.key == license) {
       PolicyValidationResult(
         subject = target.fullName,
         description = "License check matches",
@@ -19,7 +19,7 @@ class LicenseOperator(val license: String): NonEnforcingOperator() {
     } else {
       PolicyValidationResult(
         subject = target.fullName,
-        description = "License was ${target.license}, needed $license.",
+        description = "License was ${target.license?.key}, needed $license.",
         passed = false
       )
     }
