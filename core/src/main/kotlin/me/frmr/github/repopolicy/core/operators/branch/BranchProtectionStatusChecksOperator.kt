@@ -5,7 +5,13 @@ import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 
-class BranchProtectionStatusChecksOperator: PolicyRuleOperator {
+class BranchProtectionStatusChecksOperator(
+  val branch: String,
+  val enabled: Boolean,
+  val contexts: List<String>,
+  val strict: Boolean?,
+  val enforceAdmins: Boolean?
+): PolicyRuleOperator {
   override val description: String = "Required status checks"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
