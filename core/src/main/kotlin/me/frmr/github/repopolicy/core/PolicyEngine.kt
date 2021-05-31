@@ -33,6 +33,14 @@ class PolicyEngine(val policy: PolicyDescription) {
   }
 
   /**
+   * Variation on initGithubClient that can inject a totally custom
+   * github client.
+   */
+  fun initGithubClient(github: GitHub) {
+    this.githubClient = github
+  }
+
+  /**
    * Use the github client to find repos matching a subject matcher
    */
   private fun findMatchingRepos(subject: PolicySubjectMatchers): PagedSearchIterable<GHRepository>? {
