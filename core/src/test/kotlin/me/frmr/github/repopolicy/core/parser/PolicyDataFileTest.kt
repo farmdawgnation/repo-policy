@@ -13,7 +13,7 @@ class PolicyDataFileTest {
   author: Engineering Leaders <eng-leaders@example.org>
   # Rules associated with the policy
   rules:
-  - owner: ExampleOrg
+  - user: ExampleOrg
     topic: example-topic
     # Rules match on a topic set on the repository and apply repo
     # and branch settings. You can omit the topic parameter or set
@@ -27,7 +27,6 @@ class PolicyDataFileTest {
         issues: true
         projects: false
         wiki: false
-        vulnerability_alerts: true
       default_branch: main
       collaborators:
       - OrgName/engineering-team
@@ -46,7 +45,7 @@ class PolicyDataFileTest {
           dismiss_stale_reviews: false
           require_code_owner_reviews: false
           required_approving_review_count: 1
-          dissmissal_restrictions:
+          dismissal_restrictions:
             enabled: true
             users:
             - user1
@@ -74,7 +73,7 @@ class PolicyDataFileTest {
       version = "1.0",
       author = "Engineering Leaders <eng-leaders@example.org>",
       rules = listOf(PolicyRule(
-        owner = "ExampleOrg",
+        user = "ExampleOrg",
         topic = "example-topic",
         repo = PolicyRuleRepo(
           license_key = "mit",
@@ -82,7 +81,7 @@ class PolicyDataFileTest {
           visibility = "public",
           default_branch = "main",
           collaborators = listOf("OrgName/engineering-team"),
-          features = PolicyRuleRepoFeatures(issues = true, projects = false, wiki = false, vulnerability_alerts = true)
+          features = PolicyRuleRepoFeatures(issues = true, projects = false, wiki = false)
         ),
         branches = listOf(PolicyRuleBranch(
           branch = "main",
@@ -96,7 +95,7 @@ class PolicyDataFileTest {
               dismiss_stale_reviews = false,
               require_code_owner_reviews = false,
               required_approving_review_count = 1,
-              dissmissal_restrictions = PolicyRuleRequiredPullRequestReviewsDismissalRestrictions(
+              dismissal_restrictions = PolicyRuleRequiredPullRequestReviewsDismissalRestrictions(
                 enabled = true,
                 users = listOf("user1"),
                 teams = listOf("team1")
