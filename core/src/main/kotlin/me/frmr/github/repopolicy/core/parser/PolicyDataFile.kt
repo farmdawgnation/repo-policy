@@ -3,46 +3,19 @@ package me.frmr.github.repopolicy.core.parser
 import kotlinx.serialization.*
 
 @Serializable
-data class PolicyRuleRequiredPullRequestReviewsDismissalRestrictions(
-  val enabled: Boolean,
-  val users: List<String>?,
-  val teams: List<String>?
-)
-
-@Serializable
-data class PolicyRuleRequiredPullRequestReviewsPushRestrictions(
-  val enabled: Boolean,
-  val users: List<String>?,
-  val teams: List<String>?,
-  val apps: List<String>?
-)
-
-@Serializable
-data class PolicyRuleRequiredPullRequestReviews(
-  val enabled: Boolean,
-  val dismiss_stale_reviews: Boolean?,
-  val require_code_owner_reviews: Boolean?,
-  val required_approving_review_count: Int?,
-  val dismissal_restrictions: PolicyRuleRequiredPullRequestReviewsDismissalRestrictions?,
-  val push_restrictions: PolicyRuleRequiredPullRequestReviewsPushRestrictions?
-)
-
-@Serializable
-data class PolicyRuleBranchRequiredStatusChecks(
-  val enabled: Boolean,
-  val contexts: List<String>,
-  val strict: Boolean?,
-  val enforce_admins: Boolean?
-)
-
-@Serializable
 data class PolicyRuleBranchProtection(
   val enabled: Boolean,
-  val required_linear_history: Boolean?,
-  val allow_force_pushes: Boolean?,
-  val allow_deletions: Boolean?,
-  val required_pull_request_reviews: PolicyRuleRequiredPullRequestReviews?,
-  val required_status_checks: PolicyRuleBranchRequiredStatusChecks?
+  val required_checks: List<String>?,
+  val dismiss_stale_reviews: Boolean?,
+  val include_admins: Boolean?,
+  val require_up_to_date: Boolean?,
+  val require_code_owner_reviews: Boolean?,
+  val required_review_count: Int?,
+  val restrict_push_access: Boolean?,
+  val restrict_review_dismissals: Boolean?,
+  val push_teams: List<String>?,
+  val push_users: List<String>?,
+  val review_dismissal_users: List<String>?
 )
 
 @Serializable

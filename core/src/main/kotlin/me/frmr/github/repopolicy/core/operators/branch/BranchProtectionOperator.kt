@@ -5,12 +5,20 @@ import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 
-class BranchProtectionRootOperator(
+class BranchProtectionOperator(
   val branch: String,
   val enabled: Boolean,
-  val requireLinearHistory: Boolean?, // TODO: listen to this value
-  val allowForcePushes: Boolean?, // TODO: listen to this value
-  val allowDeletions: Boolean? // TODO: listen to this value
+  val requiredChecks: List<String>?,
+  val dismissStaleReviews: Boolean?,
+  val includeAdmins: Boolean?,
+  val requireBranchIsUpToDate: Boolean?,
+  val requireCodeOwnerReviews: Boolean?,
+  val requiredReviewCount: Int?,
+  val restrictPushAccess: Boolean?,
+  val restrictReviewDismissals: Boolean?,
+  val pushTeams: List<String>?,
+  val pushUsers: List<String>?,
+  val reviewDismissalUsers: List<String>?
 ): PolicyRuleOperator {
   override val description: String = "Branch protection"
 
