@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     `java`
     `application`
@@ -17,4 +19,10 @@ tasks.test {
 
 application {
     mainClass.set("me.frmr.github.repopolicy.app.MainKt")
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveBaseName.set("repo-policy")
+    }
 }
