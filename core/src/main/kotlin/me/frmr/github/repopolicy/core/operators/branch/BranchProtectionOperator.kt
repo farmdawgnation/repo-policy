@@ -23,9 +23,9 @@ class BranchProtectionOperator(
   override val description: String = "Branch protection"
 
   override fun validate(target: GHRepository): PolicyValidationResult {
-    val branch = target.getBranch(branch)
+    val ghBranch = target.getBranch(branch)
 
-    if (branch == null) {
+    if (ghBranch == null) {
       return PolicyValidationResult(
         subject = target.fullName + "/" + branch,
         description = "Branch does not exist",
@@ -33,7 +33,7 @@ class BranchProtectionOperator(
       )
     }
 
-    val isProtected = branch.isProtected
+    val isProtected = ghBranch.isProtected
     if (isProtected != enabled) {
       val message = if (enabled) {
         "Branch protection not enabled"
@@ -48,7 +48,7 @@ class BranchProtectionOperator(
     }
 
     if (isProtected) {
-      val protectionDetails = branch.protection
+      val protectionDetails = ghBranch.protection
       val problems = mutableListOf<String>()
 
       if (requiredChecks != null && protectionDetails.requiredStatusChecks.contexts.containsAll(requiredChecks)) {
