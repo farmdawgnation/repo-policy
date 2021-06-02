@@ -8,7 +8,7 @@ import me.frmr.github.repopolicy.core.operators.branch.BranchProtectionOperator
 import me.frmr.github.repopolicy.core.operators.repo.*
 
 object PolicyParser {
-  private fun createRepoOperators(input: PolicyRuleRepo?): List<PolicyRuleOperator> {
+  private fun createRepoOperators(input: PolicyRuleRepo?): MutableList<PolicyRuleOperator> {
     val resultingOperators = mutableListOf<PolicyRuleOperator>()
 
     if (input?.license_key != null) {
@@ -44,20 +44,20 @@ object PolicyParser {
     return resultingOperators
   }
 
-  private fun createBranchOperators(input: PolicyRuleBranch?): List<PolicyRuleOperator> {
+  private fun createBranchOperators(input: PolicyRuleBranch?): MutableList<PolicyRuleOperator> {
     // Nothing to see here!
     if (input == null) {
-      return emptyList()
+      return mutableListOf()
     }
 
     // Branch isn't specified or isn't specified correctly
     if (input.branch.trim() == "") {
-      return emptyList()
+      return mutableListOf()
     }
 
     // Also nothing to see here
     if (input.protection == null) {
-      return emptyList()
+      return mutableListOf()
     }
 
     val resultingOperators = mutableListOf<PolicyRuleOperator>()
@@ -83,9 +83,16 @@ object PolicyParser {
 
   private fun parseRule(input: PolicyRule): ModelPolicyRule {
     val subjectMatchers = PolicySubjectMatchers(user = input.user, topic = input.topic, org = input.org)
+    val branchOperators: List<PolicyRuleOperator> = if (input.branches != null) {
+      input.branches.flatMap { createBranchOperators(it) }
+    } else {
+      emptyList()
+    }
+    val allOperators: MutableList<PolicyRuleOperator> = createRepoOperators(input.repo)
+    allOperators.addAll(branchOperators)
     return ModelPolicyRule(
       subjectMatchers,
-      createRepoOperators(input.repo)
+      allOperators,
     )
   }
 

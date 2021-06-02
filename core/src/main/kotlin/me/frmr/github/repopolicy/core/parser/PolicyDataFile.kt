@@ -5,17 +5,17 @@ import kotlinx.serialization.*
 @Serializable
 data class PolicyRuleBranchProtection(
   val enabled: Boolean,
-  val required_checks: List<String>?,
-  val dismiss_stale_reviews: Boolean?,
-  val include_admins: Boolean?,
-  val require_up_to_date: Boolean?,
-  val require_code_owner_reviews: Boolean?,
-  val required_review_count: Int?,
-  val restrict_push_access: Boolean?,
-  val restrict_review_dismissals: Boolean?,
-  val push_teams: List<String>?,
-  val push_users: List<String>?,
-  val review_dismissal_users: List<String>?
+  val required_checks: List<String>? = null,
+  val dismiss_stale_reviews: Boolean? = null,
+  val include_admins: Boolean? = null,
+  val require_up_to_date: Boolean? = null,
+  val require_code_owner_reviews: Boolean? = null,
+  val required_review_count: Int? = null,
+  val restrict_push_access: Boolean? = null,
+  val restrict_review_dismissals: Boolean? = null,
+  val push_teams: List<String>? = null,
+  val push_users: List<String>? = null,
+  val review_dismissal_users: List<String>? = null
 )
 
 @Serializable

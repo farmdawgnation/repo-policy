@@ -16,3 +16,7 @@ rules:
       wiki: false
       issues: true
       projects: false
+  branches:
+  - branch: main
+    protection:
+      enabled: false
