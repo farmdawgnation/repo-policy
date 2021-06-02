@@ -51,11 +51,11 @@ class BranchProtectionOperator(
       val protectionDetails = ghBranch.protection
       val problems = mutableListOf<String>()
 
-      if (requiredChecks != null && protectionDetails.requiredStatusChecks.contexts.containsAll(requiredChecks)) {
+      if (requiredChecks != null && (protectionDetails.requiredStatusChecks == null || ! protectionDetails.requiredStatusChecks.contexts.containsAll(requiredChecks))) {
         problems.add("Missing required checks")
       }
 
-      if (dismissStaleReviews != null && protectionDetails.requiredReviews.isDismissStaleReviews != dismissStaleReviews) {
+      if (dismissStaleReviews != null && protectionDetails.requiredReviews?.isDismissStaleReviews != dismissStaleReviews) {
         if (dismissStaleReviews) {
           problems.add("Dismiss stale reviews disabled")
         } else {
@@ -71,7 +71,7 @@ class BranchProtectionOperator(
         }
       }
 
-      if (requireBranchIsUpToDate != null && protectionDetails.requiredStatusChecks.isRequiresBranchUpToDate != requireBranchIsUpToDate) {
+      if (requireBranchIsUpToDate != null && protectionDetails.requiredStatusChecks?.isRequiresBranchUpToDate != requireBranchIsUpToDate) {
         if (requireBranchIsUpToDate) {
           problems.add("Require branch up to date is disabled")
         } else {
@@ -79,7 +79,7 @@ class BranchProtectionOperator(
         }
       }
 
-      if (requireCodeOwnerReviews != null && protectionDetails.requiredReviews.isRequireCodeOwnerReviews != requireCodeOwnerReviews) {
+      if (requireCodeOwnerReviews != null && protectionDetails.requiredReviews?.isRequireCodeOwnerReviews != requireCodeOwnerReviews) {
         if (requireCodeOwnerReviews) {
           problems.add("Code owner reviews are not required")
         } else {
@@ -87,21 +87,21 @@ class BranchProtectionOperator(
         }
       }
 
-      if (requiredReviewCount != null && protectionDetails.requiredReviews.requiredReviewers != requiredReviewCount) {
-        val currentRequiredReviewers = protectionDetails.requiredReviews.requiredReviewers
+      if (requiredReviewCount != null && protectionDetails.requiredReviews?.requiredReviewers != requiredReviewCount) {
+        val currentRequiredReviewers = protectionDetails.requiredReviews?.requiredReviewers
         problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
       }
 
       if (restrictReviewDismissals != null) {
-        if (restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions == null) {
+        if (restrictReviewDismissals && protectionDetails.requiredReviews?.dismissalRestrictions == null) {
           problems.add("Review dismissal restrictions missing")
         }
 
-        if (!restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions != null) {
+        if (!restrictReviewDismissals && protectionDetails.requiredReviews?.dismissalRestrictions != null) {
           problems.add("Review dismissal restrictions present")
         }
 
-        if (protectionDetails.requiredReviews.dismissalRestrictions != null) {
+        if (protectionDetails.requiredReviews?.dismissalRestrictions != null) {
           if (reviewDismissalUsers != null && !protectionDetails.requiredReviews.dismissalRestrictions.users.containsAll(
               reviewDismissalUsers
             )
