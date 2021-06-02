@@ -47,93 +47,98 @@ class BranchProtectionOperator(
       )
     }
 
-    val protectionDetails = branch.protection
-    val problems = mutableListOf<String>()
+    if (isProtected) {
+      val protectionDetails = branch.protection
+      val problems = mutableListOf<String>()
 
-    if (requiredChecks != null && protectionDetails.requiredStatusChecks.contexts.containsAll(requiredChecks)) {
-      problems.add("Missing required checks")
-    }
-
-    if (dismissStaleReviews != null && protectionDetails.requiredReviews.isDismissStaleReviews != dismissStaleReviews) {
-      if (dismissStaleReviews) {
-        problems.add("Dismiss stale reviews disabled")
-      } else {
-        problems.add("Dismiss stale reviews enabled")
-      }
-    }
-
-    if (includeAdmins != null && protectionDetails.enforceAdmins.isEnabled != includeAdmins) {
-      if (includeAdmins) {
-        problems.add("Include admins disabled")
-      } else {
-        problems.add("Include admins enabled")
-      }
-    }
-
-    if (requireBranchIsUpToDate != null && protectionDetails.requiredStatusChecks.isRequiresBranchUpToDate != requireBranchIsUpToDate) {
-      if (requireBranchIsUpToDate) {
-        problems.add("Require branch up to date is disabled")
-      } else {
-        problems.add("Require branch up to date is enabled")
-      }
-    }
-
-    if (requireCodeOwnerReviews != null && protectionDetails.requiredReviews.isRequireCodeOwnerReviews != requireCodeOwnerReviews) {
-      if (requireCodeOwnerReviews) {
-        problems.add("Code owner reviews are not required")
-      } else {
-        problems.add("Code owner reviews are required")
-      }
-    }
-
-    if (requiredReviewCount != null && protectionDetails.requiredReviews.requiredReviewers != requiredReviewCount) {
-      val currentRequiredReviewers = protectionDetails.requiredReviews.requiredReviewers
-      problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
-    }
-
-    if (restrictReviewDismissals != null) {
-      if (restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions == null) {
-        problems.add("Review dismissal restrictions missing")
+      if (requiredChecks != null && protectionDetails.requiredStatusChecks.contexts.containsAll(requiredChecks)) {
+        problems.add("Missing required checks")
       }
 
-      if (! restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions != null) {
-        problems.add("Review dismissal restrictions present")
-      }
-
-      if (protectionDetails.requiredReviews.dismissalRestrictions != null) {
-        if (reviewDismissalUsers != null && ! protectionDetails.requiredReviews.dismissalRestrictions.users.containsAll(reviewDismissalUsers)) {
-          problems.add("Missing users from review dismissal users")
+      if (dismissStaleReviews != null && protectionDetails.requiredReviews.isDismissStaleReviews != dismissStaleReviews) {
+        if (dismissStaleReviews) {
+          problems.add("Dismiss stale reviews disabled")
+        } else {
+          problems.add("Dismiss stale reviews enabled")
         }
       }
-    }
 
-    if (restrictPushAccess != null) {
-      if (restrictPushAccess == true && protectionDetails.restrictions == null) {
-        problems.add("No push restrictions found")
-      }
-
-      if (restrictPushAccess == false && protectionDetails.restrictions != null) {
-        problems.add("Push restrictions found")
-      }
-
-      if (protectionDetails.restrictions != null) {
-        if (pushTeams != null && ! protectionDetails.restrictions.teams.containsAll(pushTeams)) {
-          problems.add("Teams missing from list of teams that can push")
-        }
-
-        if (pushUsers != null && ! protectionDetails.restrictions.users.containsAll(pushUsers)) {
-          problems.add("Users missing from list of users that can push")
+      if (includeAdmins != null && protectionDetails.enforceAdmins.isEnabled != includeAdmins) {
+        if (includeAdmins) {
+          problems.add("Include admins disabled")
+        } else {
+          problems.add("Include admins enabled")
         }
       }
-    }
 
-    if (problems.isNotEmpty()) {
-      return PolicyValidationResult(
-        subject = target.fullName + "/" + branch,
-        description = "Branch protection rules do not match policy",
-        passed = false,
-        extra = problems.joinToString("; ")
-      )
+      if (requireBranchIsUpToDate != null && protectionDetails.requiredStatusChecks.isRequiresBranchUpToDate != requireBranchIsUpToDate) {
+        if (requireBranchIsUpToDate) {
+          problems.add("Require branch up to date is disabled")
+        } else {
+          problems.add("Require branch up to date is enabled")
+        }
+      }
+
+      if (requireCodeOwnerReviews != null && protectionDetails.requiredReviews.isRequireCodeOwnerReviews != requireCodeOwnerReviews) {
+        if (requireCodeOwnerReviews) {
+          problems.add("Code owner reviews are not required")
+        } else {
+          problems.add("Code owner reviews are required")
+        }
+      }
+
+      if (requiredReviewCount != null && protectionDetails.requiredReviews.requiredReviewers != requiredReviewCount) {
+        val currentRequiredReviewers = protectionDetails.requiredReviews.requiredReviewers
+        problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
+      }
+
+      if (restrictReviewDismissals != null) {
+        if (restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions == null) {
+          problems.add("Review dismissal restrictions missing")
+        }
+
+        if (!restrictReviewDismissals && protectionDetails.requiredReviews.dismissalRestrictions != null) {
+          problems.add("Review dismissal restrictions present")
+        }
+
+        if (protectionDetails.requiredReviews.dismissalRestrictions != null) {
+          if (reviewDismissalUsers != null && !protectionDetails.requiredReviews.dismissalRestrictions.users.containsAll(
+              reviewDismissalUsers
+            )
+          ) {
+            problems.add("Missing users from review dismissal users")
+          }
+        }
+      }
+
+      if (restrictPushAccess != null) {
+        if (restrictPushAccess == true && protectionDetails.restrictions == null) {
+          problems.add("No push restrictions found")
+        }
+
+        if (restrictPushAccess == false && protectionDetails.restrictions != null) {
+          problems.add("Push restrictions found")
+        }
+
+        if (protectionDetails.restrictions != null) {
+          if (pushTeams != null && !protectionDetails.restrictions.teams.containsAll(pushTeams)) {
+            problems.add("Teams missing from list of teams that can push")
+          }
+
+          if (pushUsers != null && !protectionDetails.restrictions.users.containsAll(pushUsers)) {
+            problems.add("Users missing from list of users that can push")
+          }
+        }
+      }
+
+      if (problems.isNotEmpty()) {
+        return PolicyValidationResult(
+          subject = target.fullName + "/" + branch,
+          description = "Branch protection rules do not match policy",
+          passed = false,
+          extra = problems.joinToString("; ")
+        )
+      }
     }
 
     return PolicyValidationResult(

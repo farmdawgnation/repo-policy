@@ -19,4 +19,6 @@ rules:
   branches:
   - branch: main
     protection:
-      enabled: false
+      enabled: true
+      include_admins: true
+      restrict_review_dismissals: false
