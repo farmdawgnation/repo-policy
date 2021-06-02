@@ -34,34 +34,21 @@ class PolicyDataFileTest {
     - branch: main
       protection:
         enabled: true
-        required_status_checks:
-          enabled: true
-          contexts:
-          - "unit-tests"
-          strict: false
-          enforce_admins: false
-        required_pull_request_reviews:
-          enabled: true
-          dismiss_stale_reviews: false
-          require_code_owner_reviews: false
-          required_approving_review_count: 1
-          dismissal_restrictions:
-            enabled: true
-            users:
-            - user1
-            teams:
-            - team1
-          push_restrictions:
-            enabled: true
-            users:
-            - user1
-            teams:
-            - team1
-            apps:
-            - app1
-        required_linear_history: false
-        allow_force_pushes: false
-        allow_deletions: false
+        required_checks:
+        - "unit-tests"
+        dismiss_stale_reviews: true
+        include_admins: true
+        require_up_to_date: true
+        require_code_owner_reviews: true
+        required_review_count: 2
+        restrict_push_access: false
+        restrict_review_dismissals: true
+        push_teams:
+        - "AnchorTab/engineering"
+        push_users:
+        - "farmdawgnation"
+        review_dismissal_users:
+        - "farmdawgnation"
   """.trimIndent()
 
   @Test
@@ -87,35 +74,20 @@ class PolicyDataFileTest {
           branch = "main",
           protection = PolicyRuleBranchProtection(
             enabled = true,
-            required_linear_history = false,
-            allow_force_pushes = false,
-            allow_deletions = false,
-            required_pull_request_reviews = PolicyRuleRequiredPullRequestReviews(
-              enabled = true,
-              dismiss_stale_reviews = false,
-              require_code_owner_reviews = false,
-              required_approving_review_count = 1,
-              dismissal_restrictions = PolicyRuleRequiredPullRequestReviewsDismissalRestrictions(
-                enabled = true,
-                users = listOf("user1"),
-                teams = listOf("team1")
-              ),
-              push_restrictions = PolicyRuleRequiredPullRequestReviewsPushRestrictions(
-                enabled = true,
-                users = listOf("user1"),
-                teams = listOf("team1"),
-                apps = listOf("app1")
-              )),
-            required_status_checks = PolicyRuleBranchRequiredStatusChecks(
-              enabled = true,
-              contexts = listOf("unit-tests"),
-              strict = false,
-              enforce_admins = false
-            )
-          )
+            required_checks = listOf("unit-tests"),
+            dismiss_stale_reviews = true,
+            include_admins = true,
+            require_up_to_date = true,
+            require_code_owner_reviews = true,
+            required_review_count = 2,
+            restrict_push_access = false,
+            restrict_review_dismissals = true,
+            push_teams = listOf("AnchorTab/engineering"),
+            push_users = listOf("farmdawgnation"),
+            review_dismissal_users = listOf("farmdawgnation")
         ))
       ))
-    )
+    ))
 
     assertThat(result).isEqualTo(expectedOutput)
   }
