@@ -45,7 +45,12 @@ class BranchProtectionRootOperator(
     val validationResult = validate(target)
 
     if (validationResult.passed) {
-
+      return PolicyEnforcementResult(
+        subject = target.fullName + "/" + branch,
+        description = "Basic branch protection rules are in place",
+        passedValidation = true,
+        policyEnforced = false
+      )
     }
 
     return PolicyEnforcementResult(
