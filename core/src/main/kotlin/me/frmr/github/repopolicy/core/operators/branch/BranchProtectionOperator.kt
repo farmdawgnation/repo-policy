@@ -99,7 +99,7 @@ class BranchProtectionOperator(
         }
 
         if (protectionDetails.requiredReviews?.dismissalRestrictions != null) {
-          if (reviewDismissalUsers != null && !protectionDetails.requiredReviews.dismissalRestrictions.users.containsAll(
+          if (reviewDismissalUsers != null && !protectionDetails.requiredReviews.dismissalRestrictions.users.map { it.name }.containsAll(
               reviewDismissalUsers
             )
           ) {

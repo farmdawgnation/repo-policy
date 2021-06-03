@@ -77,10 +77,10 @@ class BranchProtectionOperatorTest {
       return sut.validate(mockRepo)
     } else {
       every { mockBranch.isProtected } returns true
-      every { mockBranch.protection } returns mockProtection
+      every { mockBranch.getProtection() }.answers { mockProtection }
     }
 
-    val mockRequiredStatusChecks = if (currentRequiredChecks == null || currentRequireBranchUpToDate == null) {
+    val mockRequiredStatusChecks = if (currentRequiredChecks == null && currentRequireBranchUpToDate == null) {
       null
     } else {
       val mrsc = mockk<GHBranchProtection.RequiredStatusChecks>()
@@ -167,5 +167,406 @@ class BranchProtectionOperatorTest {
     val result2 = runValidate(desiredEnabled = false, currentEnabled = false)
     assertThat(result2.passed).isTrue
     assertThat(result2.description).isEqualTo("Branch protection matches policy")
+  }
+
+  @Test
+  fun failsOnMissingRequiredChecks() {
+    val result = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequiredChecks = listOf("unit-tests", "integration-tests"),
+      currentRequiredChecks = listOf("unit-tests")
+    )
+
+    assertThat(result.passed).isFalse
+    assertThat(result.extra).isEqualTo("Missing required checks")
+  }
+
+  @Test
+  fun passesOnMatchingRequiredChecks() {
+    val result = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequiredChecks = listOf("unit-tests", "integration-tests"),
+      currentRequiredChecks = listOf("unit-tests", "integration-tests")
+    )
+
+    assertThat(result.passed).isTrue
+  }
+
+  @Test
+  fun failsOnDismissStaleReviewsMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredDismissStaleReviews = false,
+      currentDismissStaleReviews = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Dismiss stale reviews enabled")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredDismissStaleReviews = true,
+      currentDismissStaleReviews = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("Dismiss stale reviews disabled")
+  }
+
+  @Test
+  fun passesOnDismissStaleReviewsMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredDismissStaleReviews = false,
+      currentDismissStaleReviews = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredDismissStaleReviews = true,
+      currentDismissStaleReviews = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnIncludeAdminsMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredIncludeAdmins = false,
+      currentIncludeAdmins = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Include admins enabled")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredIncludeAdmins = true,
+      currentIncludeAdmins = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("Include admins disabled")
+  }
+
+  @Test
+  fun passesOnIncludeAdminsMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredIncludeAdmins = false,
+      currentIncludeAdmins = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredIncludeAdmins = true,
+      currentIncludeAdmins = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnRequireBranchUpToDateMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireBranchUpToDate = false,
+      currentRequireBranchUpToDate = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Require branch up to date is enabled")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireBranchUpToDate = true,
+      currentRequireBranchUpToDate = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("Require branch up to date is disabled")
+  }
+
+  @Test
+  fun passesOnRequireBranchUpToDateMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireBranchUpToDate = false,
+      currentRequireBranchUpToDate = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireBranchUpToDate = true,
+      currentRequireBranchUpToDate = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnRequireCodeOwnerReviewsMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireCodeOwnerReviews = false,
+      currentRequireCodeOwnerReviews = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Code owner reviews are required")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireCodeOwnerReviews = true,
+      currentRequireCodeOwnerReviews = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("Code owner reviews are not required")
+  }
+
+  @Test
+  fun passesOnRequireCodeOwnerReviewsMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireCodeOwnerReviews = false,
+      currentRequireCodeOwnerReviews = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequireCodeOwnerReviews = true,
+      currentRequireCodeOwnerReviews = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnRequiredReviewCountMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequiredReviewCount = 1,
+      currentRequiredReviewCount = 0,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Requires 0 reviews, should require 1")
+  }
+
+  @Test
+  fun passesOnRequiredReviewCountMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRequiredReviewCount = 1,
+      currentRequiredReviewCount = 1,
+    )
+
+    assertThat(result1.passed).isTrue
+  }
+
+  @Test
+  fun failsOnRestrictReviewDismissalsMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = false,
+      currentRestrictReviewDismissals = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Review dismissal restrictions present")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = true,
+      currentRestrictReviewDismissals = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("Review dismissal restrictions missing")
+  }
+
+  @Test
+  fun passesOnRestrictReviewDismissalsMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = false,
+      currentRestrictReviewDismissals = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = true,
+      currentRestrictReviewDismissals = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnReviewDismissalUsersMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = true,
+      currentRestrictReviewDismissals = true,
+      desiredReviewDismissalUsers = listOf("thing1", "thing2"),
+      currentReviewDismissalUsers = listOf("thing1")
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Missing users from review dismissal users")
+  }
+
+  @Test
+  fun passesOnReviewDismissalUsersMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictReviewDismissals = true,
+      currentRestrictReviewDismissals = true,
+      desiredReviewDismissalUsers = listOf("thing1", "thing2"),
+      currentReviewDismissalUsers = listOf("thing1", "thing2")
+    )
+
+    assertThat(result1.passed).isTrue
+  }
+
+  @Test
+  fun failsOnRestrictPushAccessMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = false,
+      currentRestrictPushAccess = true,
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Push restrictions found")
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = false,
+    )
+
+    assertThat(result2.passed).isFalse
+    assertThat(result2.extra).isEqualTo("No push restrictions found")
+  }
+
+  @Test
+  fun passesOnRestrictPushAccessMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = false,
+      currentRestrictPushAccess = false,
+    )
+
+    assertThat(result1.passed).isTrue
+
+    val result2 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = true,
+    )
+
+    assertThat(result2.passed).isTrue
+  }
+
+  @Test
+  fun failsOnPushTeamsMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = true,
+      desiredPushTeams = listOf("thing1", "thing2"),
+      currentPushTeams = listOf("thing1")
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Teams missing from list of teams that can push")
+  }
+
+  @Test
+  fun passesOnPushTeamsMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = true,
+      desiredPushTeams = listOf("thing1", "thing2"),
+      currentPushTeams = listOf("thing1", "thing2")
+    )
+
+    assertThat(result1.passed).isTrue
+  }
+
+  @Test
+  fun failsOnPushUsersMismatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = true,
+      desiredPushUsers = listOf("thing1", "thing2"),
+      currentPushUsers = listOf("thing1")
+    )
+
+    assertThat(result1.passed).isFalse
+    assertThat(result1.extra).isEqualTo("Users missing from list of users that can push")
+  }
+
+  @Test
+  fun passesOnPushUsersMatch() {
+    val result1 = runValidate(
+      desiredEnabled = true,
+      currentEnabled = true,
+      desiredRestrictPushAccess = true,
+      currentRestrictPushAccess = true,
+      desiredPushUsers = listOf("thing1", "thing2"),
+      currentPushUsers = listOf("thing1", "thing2")
+    )
+
+    assertThat(result1.passed).isTrue
   }
 }
