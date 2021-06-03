@@ -24,14 +24,11 @@ class BranchProtectionOperator(
 
   override fun validate(target: GHRepository): PolicyValidationResult {
     val ghBranch = target.getBranch(branch)
-
-    if (ghBranch == null) {
-      return PolicyValidationResult(
+      ?: return PolicyValidationResult(
         subject = target.fullName + "/" + branch,
         description = "Branch does not exist",
         passed = false
       )
-    }
 
     val isProtected = ghBranch.isProtected
     if (isProtected != enabled) {
@@ -121,11 +118,11 @@ class BranchProtectionOperator(
         }
 
         if (protectionDetails.restrictions != null) {
-          if (pushTeams != null && !protectionDetails.restrictions.teams.containsAll(pushTeams)) {
+          if (pushTeams != null && !protectionDetails.restrictions.teams.map{ it.name }.containsAll(pushTeams)) {
             problems.add("Teams missing from list of teams that can push")
           }
 
-          if (pushUsers != null && !protectionDetails.restrictions.users.containsAll(pushUsers)) {
+          if (pushUsers != null && !protectionDetails.restrictions.users.map{ it.name }.containsAll(pushUsers)) {
             problems.add("Users missing from list of users that can push")
           }
         }
