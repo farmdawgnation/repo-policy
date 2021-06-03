@@ -16,15 +16,3 @@ rules:
       wiki: false
       issues: true
       projects: false
-  branches:
-  - branch: main
-    protection:
-      enabled: true
-      include_admins: true
-      restrict_review_dismissals: false
-      required_checks:
-      - units
-      restrict_push_access: true
-      required_review_count: 2
-      require_code_owner_reviews: true
-      require_up_to_date: true
