@@ -6,7 +6,8 @@ on:
     - published
 
 jobs:
-  build:
+  build_jar:
+    name: Build JAR
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +29,22 @@ jobs:
         asset_path: app/build/libs/repo-policy-all.jar
         asset_name: repo-policy-all.jar
         asset_content_type: application/zip
+
+  build_docker:
+    name: Build Docker
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build and Push
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/repo-policy:${{ github.event.release.tag_name }}
