@@ -65,7 +65,7 @@ class FeaturesOperatorTest {
   @Test
   fun validationFailsWithPartialRequestsMismatching() {
     val result = runValidate(
-      false,
+      null,
       true,
       true,
       false,
@@ -81,7 +81,7 @@ class FeaturesOperatorTest {
   fun validationFailsWithFullRequestsMismatching() {
     val result = runValidate(
       true,
-      true,
+      false,
       true,
       false,
       false,
@@ -89,7 +89,7 @@ class FeaturesOperatorTest {
     )
 
     assertThat(result.passed).isFalse
-    assertThat(result.description).isEqualTo("policy requires projects be enabled, found disabled, policy requires wikis be disabled, found enabled")
+    assertThat(result.description).isEqualTo("policy requires issues be enabled, found disabled, policy requires projects be enabled, found disabled, policy requires wikis be disabled, found enabled")
   }
 
   @Test
