@@ -20,4 +20,9 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build jacocoTestReport
+    - name: Upload code coverage
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: jacocoTestReport.xml
