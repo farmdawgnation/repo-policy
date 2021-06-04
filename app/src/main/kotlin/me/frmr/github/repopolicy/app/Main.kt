@@ -39,8 +39,8 @@ class Main: Callable<Int> {
     // exit code means
     println("Running policy engine...")
     val fails = when (mode) {
-      Mode.enforce -> PolicyEnforcementReporter.report(engine.enforce())
-      Mode.validate -> PolicyValidationReporter.report(engine.validate())
+      Mode.enforce -> ConsolePolicyEnforcementReporter.report(engine.enforce())
+      Mode.validate -> ConsolePolicyValidationReporter.report(engine.validate())
     }
     return fails
   }
