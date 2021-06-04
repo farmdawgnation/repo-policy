@@ -123,7 +123,7 @@ class FeaturesOperatorTest {
   }
 
   @Test
-  fun enforcementWorksAsExpected() {
+  fun enforcementWorksAsExpectedWhenValidationFails() {
     val result = runEnforce(
       true,
       false,
@@ -135,5 +135,20 @@ class FeaturesOperatorTest {
 
     assertThat(result.passedValidation).isFalse
     assertThat(result.policyEnforced).isTrue
+  }
+
+  @Test
+  fun enforcementWorksAsExpectedWhenValidationPasses() {
+    val result = runEnforce(
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    )
+
+    assertThat(result.passedValidation).isTrue
+    assertThat(result.policyEnforced).isFalse
   }
 }
