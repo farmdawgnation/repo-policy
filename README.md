@@ -1,5 +1,7 @@
 # Matt Farmer's Repo Policy Utility
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/66af2fc4ddd647a7a3788397202d337b)](https://app.codacy.com/gh/farmdawgnation/repo-policy?utm_source=github.com&utm_medium=referral&utm_content=farmdawgnation/repo-policy&utm_campaign=Badge_Grade_Settings)
+
 Welcome to the *Repo Policy Utility*. This tool is for everyone who is tired of
 having to manually validate GitHub Repository settings across tens or hundreds
 of GitHub Repositories in your organization. You can define a **policy** for
