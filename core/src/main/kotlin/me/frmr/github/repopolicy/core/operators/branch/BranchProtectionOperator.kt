@@ -4,6 +4,8 @@ import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GHTeam
+import org.kohsuke.github.GHTeamBuilder
 
 class BranchProtectionOperator(
   val branch: String,
@@ -146,20 +148,69 @@ class BranchProtectionOperator(
   }
 
   override fun enforce(target: GHRepository): PolicyEnforcementResult {
+    val ghBranch = target.getBranch(branch)
+      ?: return PolicyEnforcementResult(
+        subject = target.fullName + "/" + branch,
+        description = "Branch does not exist",
+        passedValidation = false,
+        policyEnforced = false
+      )
+
     val validationResult = validate(target)
 
     if (validationResult.passed) {
       return PolicyEnforcementResult(
         subject = target.fullName + "/" + branch,
-        description = "Basic branch protection rules are in place",
+        description = validationResult.description,
         passedValidation = true,
         policyEnforced = false
       )
     }
 
+    // Disable protection on this branch first
+    ghBranch.disableProtection()
+
+    // Rebuild protection based on the policy
+    var protectionBuilder = ghBranch.enableProtection()
+
+    if (requiredChecks != null) {
+      protectionBuilder = protectionBuilder.addRequiredChecks(requiredChecks)
+    }
+
+    if (dismissStaleReviews != null) {
+      protectionBuilder = protectionBuilder.dismissStaleReviews(dismissStaleReviews)
+    }
+
+    if (includeAdmins != null) {
+      protectionBuilder = protectionBuilder.includeAdmins(includeAdmins)
+    }
+
+    if (requireBranchIsUpToDate != null) {
+      protectionBuilder = protectionBuilder.requireBranchIsUpToDate(requireBranchIsUpToDate)
+    }
+
+    if (requireCodeOwnerReviews != null) {
+      protectionBuilder = protectionBuilder.requireCodeOwnReviews(requireCodeOwnerReviews)
+    }
+
+    if (requiredReviewCount != null && requiredReviewCount > 0) {
+      protectionBuilder = protectionBuilder.requiredReviewers(requiredReviewCount)
+    }
+
+    if (restrictPushAccess != null && restrictPushAccess == true) {
+      protectionBuilder = protectionBuilder.restrictPushAccess()
+    }
+
+    if (restrictReviewDismissals != null && restrictReviewDismissals == true) {
+      protectionBuilder = protectionBuilder.restrictReviewDismissals()
+    }
+
+    // Enable the protection
+    protectionBuilder.enable()
+
     return PolicyEnforcementResult(
       subject = target.fullName + "/" + branch,
-      description = "Enforced basic branch protection rules",
+      description = "Enforced branch protection",
       passedValidation = false,
       policyEnforced = true
     )
