@@ -7,6 +7,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
+val versionNumber = System.getenv("BUILD_VERSION") ?: "0.0.0"
+
+version this.versionNumber
+
 dependencies {
     implementation(project(":core"))
     implementation("info.picocli:picocli:4.6.0")
