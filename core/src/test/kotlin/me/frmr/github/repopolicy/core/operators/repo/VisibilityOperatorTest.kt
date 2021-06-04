@@ -28,8 +28,11 @@ class VisibilityOperatorTest {
 
   @Test
   fun validateFailsWhenVisibilityMismatches() {
-    val result = runValidate("public", "private")
-    assertThat(result.passed).isFalse
+    val result1 = runValidate("public", "private")
+    assertThat(result1.passed).isFalse
+
+    val result2 = runValidate("private", "public")
+    assertThat(result2.passed).isFalse
   }
 
   @Test
