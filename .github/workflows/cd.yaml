@@ -18,7 +18,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build jacocoTestReport
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -29,6 +29,11 @@ jobs:
         asset_path: app/build/libs/repo-policy-all.jar
         asset_name: repo-policy-all.jar
         asset_content_type: application/zip
+    - name: Upload code coverage
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: jacocoTestReport.xml
 
   build_docker:
     name: Build Docker

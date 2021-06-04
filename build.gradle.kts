@@ -2,6 +2,7 @@ plugins {
   java
   kotlin("jvm") version "1.4.20" apply false
   kotlin("plugin.serialization") version "1.4.20" apply false
+  jacoco
 }
 
 repositories {

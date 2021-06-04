@@ -2,6 +2,7 @@ plugins {
     `java-library`
     kotlin("jvm")
     kotlin("plugin.serialization")
+    jacoco
 }
 
 dependencies {
@@ -14,4 +15,12 @@ dependencies {
 tasks.test {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+        csv.isEnabled = false
+        html.destination = layout.buildDirectory.dir("jacocoHtml").get().asFile
+    }
 }
