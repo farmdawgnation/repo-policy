@@ -6,6 +6,11 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
 
+/**
+ * Policy rule operator that validates the default branch. Does not enforce so
+ * as to avoid potentially super-disruptive branch moves as a part of an enforce
+ * action.
+ */
 class DefaultBranchOperator(val defaultBranch: String): NonEnforcingOperator() {
   override val description: String = "Default branch name"
 

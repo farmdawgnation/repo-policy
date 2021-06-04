@@ -6,6 +6,10 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
 
+/**
+ * Policy rule operator that validates that all collaborators requested are present
+ * on the repository. This does not have an enforce mode.
+ */
 class CollaboratorsOperator(desiredCollaborators: List<String>): NonEnforcingOperator() {
   override val description: String = "Collaborators"
   private val desiredCollaboratorsSet = desiredCollaborators.toSet()

@@ -1,5 +1,5 @@
 FROM adoptopenjdk:11-jdk-hotspot AS build-env
-ADD . /opt/app
+COPY . /opt/app
 WORKDIR /opt/app
 RUN ./gradlew build
 

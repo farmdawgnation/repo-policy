@@ -6,6 +6,10 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
 
+/**
+ * Validates the visibility of the repository. Does not profile an enforce function so as to not
+ * cause unexpected visibility changes during an enforce action.
+ */
 class VisibilityOperator(private val requiredVisibility: String): NonEnforcingOperator() {
   override val description: String = "Repository visibility"
 

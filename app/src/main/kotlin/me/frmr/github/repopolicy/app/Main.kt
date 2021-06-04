@@ -11,6 +11,7 @@ import kotlin.system.exitProcess
 @Command(name="repo-policy", mixinStandardHelpOptions = true,
     description=["Validates or enforces a repo policy against GitHub repos"])
 class Main: Callable<Int> {
+  /** Mode the engine should run in */
   enum class Mode{
     validate, enforce
   }

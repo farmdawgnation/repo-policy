@@ -6,6 +6,9 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 
+/**
+ * Policy rule operator for validating and enforcing branch protection.
+ */
 class BranchProtectionOperator(
   val branch: String,
   val enabled: Boolean,

@@ -10,7 +10,13 @@ import org.kohsuke.github.GitHub
 interface PolicyRuleOperator {
   val description: String
 
+  /**
+   * Validate the state of the repository against the policy
+   */
   fun validate(target: GHRepository): PolicyValidationResult
 
+  /**
+   * Enforce the policy against the current state of the repository
+   */
   fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult
 }

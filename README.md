@@ -39,7 +39,7 @@ you want to make the changes to the repository.
 
 Usage for validate mode is as follows:
 
-```
+```bash
 $ java -jar repo-policy-all.jar validate my-policy.yaml
 ```
 
@@ -47,7 +47,7 @@ $ java -jar repo-policy-all.jar validate my-policy.yaml
 
 Usage for enforce mode is as follows:
 
-```
+```bash
 $ java -jar repo-policy-all.jar enforce my-policy.yaml
 ```
 
@@ -106,9 +106,9 @@ rules:
 ```
 
 A few things to note about how this works:
-- Most keys can be omitted if you don't want the policy to have an
+* Most keys can be omitted if you don't want the policy to have an
   opinion on the setting.
-- Required checks, teams, and users keys are a non-exclusive check, so
+* Required checks, teams, and users keys are a non-exclusive check, so
   they will pass validation as long as _at least those people_ are
   mentioned. However, enforcement may be exclusive due to nuances in the
   way GitHub's API works. This means users not mentioned in the policy

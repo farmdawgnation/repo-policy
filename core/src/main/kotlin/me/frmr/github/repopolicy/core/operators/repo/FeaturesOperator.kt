@@ -6,6 +6,9 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 
+/**
+ * Policy rule operator that validates and enforces the enable/disabled status of features on the repository.
+ */
 class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean?, val wikiEnabled: Boolean?): PolicyRuleOperator {
   override val description: String = "Enforce enabled/disabled repo features"
 
