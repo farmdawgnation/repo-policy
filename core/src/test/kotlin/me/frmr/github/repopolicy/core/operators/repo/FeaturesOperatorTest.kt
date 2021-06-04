@@ -65,7 +65,7 @@ class FeaturesOperatorTest {
   @Test
   fun validationFailsWithPartialRequestsMismatching() {
     val result = runValidate(
-      null,
+      false,
       true,
       true,
       false,
