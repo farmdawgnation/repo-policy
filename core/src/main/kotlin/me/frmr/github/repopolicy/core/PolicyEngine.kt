@@ -96,7 +96,7 @@ class PolicyEngine(val policy: PolicyDescription) {
           emptyList()
         } else {
           rule.operators.map { operator ->
-            operator.enforce(repo)
+            operator.enforce(repo, this.githubClient)
           }
         }
       }

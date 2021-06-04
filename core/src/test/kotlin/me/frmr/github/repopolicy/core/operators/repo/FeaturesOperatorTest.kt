@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 @ExtendWith(MockKExtension::class)
 class FeaturesOperatorTest {
@@ -58,7 +59,7 @@ class FeaturesOperatorTest {
       every { mockRepo.enableWiki(desiredWiki) } returns Unit
     }
 
-    return sut.enforce(mockRepo)
+    return sut.enforce(mockRepo, mockk<GitHub>())
   }
 
   @Test

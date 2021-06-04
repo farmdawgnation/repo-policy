@@ -1,6 +1,7 @@
 package me.frmr.github.repopolicy.core.model
 
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 /**
  * A *policy rule* defines a particular rule that gets enforced against the
@@ -11,5 +12,5 @@ interface PolicyRuleOperator {
 
   fun validate(target: GHRepository): PolicyValidationResult
 
-  fun enforce(target: GHRepository): PolicyEnforcementResult
+  fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 @ExtendWith(MockKExtension::class)
 class DeleteBranchOnMergeOperatorTest {
@@ -32,7 +33,7 @@ class DeleteBranchOnMergeOperatorTest {
     every { mockRepo.isDeleteBranchOnMerge } returns current
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
     every { mockRepo.deleteBranchOnMerge(desired) } returns Unit
-    return sut.enforce(mockRepo)
+    return sut.enforce(mockRepo, mockk<GitHub>())
   }
 
   @Test

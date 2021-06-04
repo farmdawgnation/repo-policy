@@ -4,6 +4,7 @@ import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean?, val wikiEnabled: Boolean?): PolicyRuleOperator {
   override val description: String = "Enforce enabled/disabled repo features"
@@ -49,7 +50,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
     }
   }
 
-  override fun enforce(target: GHRepository): PolicyEnforcementResult {
+  override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
     val validationResult = validate(target)
 
     return if (validationResult.passed) {

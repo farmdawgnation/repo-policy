@@ -2,15 +2,15 @@ package me.frmr.github.repopolicy.core.operators
 
 import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
-import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 /**
  * Some operators don't include the ability to automatically enforce their
  * rule. This may be due to the complexity or something else.
  */
 abstract class NonEnforcingOperator: PolicyRuleOperator {
-  override fun enforce(target: GHRepository): PolicyEnforcementResult {
+  override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
     val validationResult = validate(target)
 
     return if (validationResult.passed) {

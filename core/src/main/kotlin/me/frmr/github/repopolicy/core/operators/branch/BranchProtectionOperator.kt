@@ -4,8 +4,7 @@ import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
-import org.kohsuke.github.GHTeam
-import org.kohsuke.github.GHTeamBuilder
+import org.kohsuke.github.GitHub
 
 class BranchProtectionOperator(
   val branch: String,
@@ -147,7 +146,7 @@ class BranchProtectionOperator(
     )
   }
 
-  override fun enforce(target: GHRepository): PolicyEnforcementResult {
+  override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
     val ghBranch = target.getBranch(branch)
       ?: return PolicyEnforcementResult(
         subject = target.fullName + "/" + branch,
@@ -203,6 +202,34 @@ class BranchProtectionOperator(
 
     if (restrictReviewDismissals != null && restrictReviewDismissals == true) {
       protectionBuilder = protectionBuilder.restrictReviewDismissals()
+    }
+
+    if (pushTeams != null) {
+      val teams = pushTeams.map { fullTeamName ->
+        val teamParts = fullTeamName.split("/")
+        val organization = teamParts.get(0)
+        val teamSlug = teamParts.get(1)
+
+        github.getOrganization(organization).getTeamBySlug(teamSlug)
+      }
+
+      protectionBuilder = protectionBuilder.teamPushAccess(teams)
+    }
+
+    if (pushUsers != null) {
+      val users = pushUsers.map { userId ->
+        github.getUser(userId)
+      }
+
+      protectionBuilder = protectionBuilder.userPushAccess(users)
+    }
+
+    if (reviewDismissalUsers != null) {
+      val users = reviewDismissalUsers.map { userId ->
+        github.getUser(userId)
+      }
+
+      protectionBuilder = protectionBuilder.userReviewDismissals(users)
     }
 
     // Enable the protection
