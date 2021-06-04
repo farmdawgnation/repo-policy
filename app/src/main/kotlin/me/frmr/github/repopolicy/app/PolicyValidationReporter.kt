@@ -2,6 +2,9 @@ package me.frmr.github.repopolicy.app
 
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 
+/**
+ * Console reporter for policy validation
+ */
 object PolicyValidationReporter {
   fun report(results: List<PolicyValidationResult>): Int {
     var fails = 0

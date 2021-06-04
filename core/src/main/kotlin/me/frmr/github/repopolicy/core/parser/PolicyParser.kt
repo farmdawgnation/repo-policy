@@ -7,6 +7,10 @@ import me.frmr.github.repopolicy.core.model.PolicySubjectMatchers
 import me.frmr.github.repopolicy.core.operators.branch.BranchProtectionOperator
 import me.frmr.github.repopolicy.core.operators.repo.*
 
+/**
+ * Parses the YAML like data structure into PolicyRuleOperator instances for running from
+ * PolicyEngine
+ */
 object PolicyParser {
   private fun createRepoOperators(input: PolicyRuleRepo?): MutableList<PolicyRuleOperator> {
     val resultingOperators = mutableListOf<PolicyRuleOperator>()

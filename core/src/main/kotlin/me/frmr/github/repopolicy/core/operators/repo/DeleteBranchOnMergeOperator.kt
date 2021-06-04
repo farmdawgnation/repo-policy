@@ -6,6 +6,10 @@ import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 
+/**
+ * Operator for validating and enforcing the use of the "delete branch on merge"
+ * feature.
+ */
 class DeleteBranchOnMergeOperator(val enabled: Boolean): PolicyRuleOperator {
   override val description: String = "Delete branch on merge"
 

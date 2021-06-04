@@ -2,6 +2,9 @@ package me.frmr.github.repopolicy.app
 
 import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 
+/**
+ * Console reporter for policy enforcement.
+ */
 object PolicyEnforcementReporter {
   fun report(results: List<PolicyEnforcementResult>): Int {
     var fails = 0

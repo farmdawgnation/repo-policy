@@ -8,6 +8,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.system.exitProcess
 
+/**
+ * Main class. Largely a wrapper around picocli
+ */
 @Command(name="repo-policy", mixinStandardHelpOptions = true,
     description=["Validates or enforces a repo policy against GitHub repos"])
 class Main: Callable<Int> {
@@ -43,4 +46,7 @@ class Main: Callable<Int> {
   }
 }
 
+/**
+ * Main metod that invokes pico.
+ */
 fun main(args: Array<String>): Unit = exitProcess(CommandLine(Main()).execute(*args))
