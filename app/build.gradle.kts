@@ -30,3 +30,9 @@ tasks {
         archiveBaseName.set("repo-policy")
     }
 }
+
+tasks.jar {
+    manifest {
+        //attributes("App-Version": versionNumber)
+    }
+}

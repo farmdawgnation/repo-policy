@@ -8,7 +8,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.system.exitProcess
 
-@Command(name="repo-policy", mixinStandardHelpOptions = true, version=["1.0"],
+@Command(name="repo-policy", mixinStandardHelpOptions = true,
     description=["Validates or enforces a repo policy against GitHub repos"])
 class Main: Callable<Int> {
   enum class Mode{
