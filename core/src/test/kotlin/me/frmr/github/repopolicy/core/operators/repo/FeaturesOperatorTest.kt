@@ -121,4 +121,19 @@ class FeaturesOperatorTest {
     assertThat(result.passed).isTrue
     assertThat(result.description).isEqualTo("Enabled features match policy")
   }
+
+  @Test
+  fun enforcementWorksAsExpected() {
+    val result = runEnforce(
+      true,
+      false,
+      true,
+      false,
+      true,
+      true
+    )
+
+    assertThat(result.passedValidation).isFalse
+    assertThat(result.policyEnforced).isTrue
+  }
 }
