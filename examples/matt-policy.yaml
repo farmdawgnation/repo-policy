@@ -6,7 +6,7 @@ rules:
 - user: farmdawgnation
   topic: testing-repo-policy
   repo:
-    visibility: private
+    visibility: public
     delete_branch_on_merge: true
     default_branch: main
     license_key: apache-2.0
@@ -16,3 +16,9 @@ rules:
       wiki: false
       issues: true
       projects: false
+  branches:
+  - branch: main
+    protection:
+      enabled: true
+      required_checks:
+      - "build"
