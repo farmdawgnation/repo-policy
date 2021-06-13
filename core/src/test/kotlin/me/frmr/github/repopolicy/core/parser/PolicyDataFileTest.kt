@@ -29,7 +29,9 @@ class PolicyDataFileTest {
         wiki: false
       default_branch: main
       collaborators:
-      - OrgName/engineering-team
+      - org: OrgName
+        name: engineering-team
+        permission: admin
     branches:
     - branch: main
       protection:
@@ -67,7 +69,7 @@ class PolicyDataFileTest {
           delete_branch_on_merge = true,
           visibility = "public",
           default_branch = "main",
-          collaborators = listOf("OrgName/engineering-team"),
+          collaborators = listOf(PolicyRuleRepoCollaborator("OrgName", "engineering-team", "admin")),
           features = PolicyRuleRepoFeatures(issues = true, projects = false, wiki = false)
         ),
         branches = listOf(PolicyRuleBranch(
