@@ -3,6 +3,7 @@ package me.frmr.github.repopolicy.core.operators.repo
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 /**
  * Validates the visibility of the repository. Does not profile an enforce function so as to not
@@ -11,7 +12,7 @@ import org.kohsuke.github.GHRepository
 class VisibilityOperator(private val requiredVisibility: String): NonEnforcingOperator() {
   override val description: String = "Repository visibility"
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     return if (requiredVisibility == "private" && !target.isPrivate) {
       PolicyValidationResult(target.fullName, "Repository was public when should be private", false, null)
     } else if (requiredVisibility == "public" && target.isPrivate) {

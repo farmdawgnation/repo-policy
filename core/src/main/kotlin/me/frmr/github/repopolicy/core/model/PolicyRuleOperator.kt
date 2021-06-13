@@ -13,7 +13,7 @@ interface PolicyRuleOperator {
   /**
    * Validate the state of the repository against the policy
    */
-  fun validate(target: GHRepository): PolicyValidationResult
+  fun validate(target: GHRepository, github: GitHub): PolicyValidationResult
 
   /**
    * Enforce the policy against the current state of the repository

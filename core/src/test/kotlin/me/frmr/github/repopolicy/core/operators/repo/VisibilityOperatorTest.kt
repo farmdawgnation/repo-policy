@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 @ExtendWith(MockKExtension::class)
 class VisibilityOperatorTest {
@@ -20,10 +21,11 @@ class VisibilityOperatorTest {
   }
 
   fun runValidate(desiredVisibility: String, currentVisibility: String): PolicyValidationResult {
+    val mockGitHub = mockk<GitHub>()
     val sut = VisibilityOperator(desiredVisibility)
     every { mockRepo.isPrivate } returns (currentVisibility == "private")
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGitHub)
   }
 
   @Test

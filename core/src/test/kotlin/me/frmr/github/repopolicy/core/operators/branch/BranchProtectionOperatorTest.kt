@@ -62,19 +62,20 @@ class BranchProtectionOperatorTest {
       reviewDismissalUsers = desiredReviewDismissalUsers,
     )
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
+    val mockGithub = mockk<GitHub>()
     val mockBranch = mockk<GHBranch>()
     val mockProtection = mockk<GHBranchProtection>()
 
     if (! branchExists) {
       every { mockRepo.getBranch("unit-tests") } returns null
-      return sut.validate(mockRepo)
+      return sut.validate(mockRepo, mockGithub)
     } else {
       every { mockRepo.getBranch("unit-tests") } returns mockBranch
     }
 
     if (! currentEnabled) {
       every { mockBranch.isProtected } returns false
-      return sut.validate(mockRepo)
+      return sut.validate(mockRepo, mockGithub)
     } else {
       every { mockBranch.isProtected } returns true
       every { mockBranch.getProtection() }.answers { mockProtection }
@@ -137,7 +138,7 @@ class BranchProtectionOperatorTest {
       every { mockRequiredReviews.dismissalRestrictions } returns null
     }
 
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGithub)
   }
 
   @Test

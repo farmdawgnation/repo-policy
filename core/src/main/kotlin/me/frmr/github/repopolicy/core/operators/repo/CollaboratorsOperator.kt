@@ -1,10 +1,9 @@
 package me.frmr.github.repopolicy.core.operators.repo
 
-import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
-import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 /**
  * Policy rule operator that validates that all collaborators requested are present
@@ -22,7 +21,7 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
   override val description: String = "Collaborators"
   private val desiredCollaboratorsSet = desiredCollaborators.toSet()
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     val associated = this.desiredCollaboratorsSet.groupBy { it.isTeam }
     val userCollaborators = associated[false]
     val teamCollaborators = associated[true]

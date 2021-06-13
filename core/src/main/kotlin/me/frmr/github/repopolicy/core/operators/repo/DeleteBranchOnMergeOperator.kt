@@ -13,7 +13,7 @@ import org.kohsuke.github.GitHub
 class DeleteBranchOnMergeOperator(val enabled: Boolean): PolicyRuleOperator {
   override val description: String = "Delete branch on merge"
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     return if (target.isDeleteBranchOnMerge == enabled) {
       PolicyValidationResult(
         subject = target.fullName,
@@ -30,7 +30,7 @@ class DeleteBranchOnMergeOperator(val enabled: Boolean): PolicyRuleOperator {
   }
 
   override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
-    val validationResult = validate(target)
+    val validationResult = validate(target, github)
 
     if (validationResult.passed) {
       return PolicyEnforcementResult(

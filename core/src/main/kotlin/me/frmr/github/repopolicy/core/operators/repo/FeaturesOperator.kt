@@ -17,7 +17,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
     true -> "enabled"
   }
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     var passedValidation = true
     val failureReasons: MutableList<String> = mutableListOf()
 
@@ -54,7 +54,7 @@ class FeaturesOperator(val issuesEnabled: Boolean?, val projectsEnabled: Boolean
   }
 
   override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
-    val validationResult = validate(target)
+    val validationResult = validate(target, github)
 
     return if (validationResult.passed) {
       PolicyEnforcementResult(

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 @ExtendWith(MockKExtension::class)
 class DefaultBranchOperatorTest {
@@ -20,10 +21,11 @@ class DefaultBranchOperatorTest {
   }
 
   fun runValidate(desiredDefault: String, currentDefault: String): PolicyValidationResult {
+    val mockGithub = mockk<GitHub>()
     val sut = DefaultBranchOperator(desiredDefault)
     every { mockRepo.defaultBranch } returns currentDefault
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGithub)
   }
 
   @Test

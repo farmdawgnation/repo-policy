@@ -11,7 +11,7 @@ import org.kohsuke.github.GitHub
  */
 abstract class NonEnforcingOperator: PolicyRuleOperator {
   override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
-    val validationResult = validate(target)
+    val validationResult = validate(target, github)
 
     return if (validationResult.passed) {
       PolicyEnforcementResult(target.fullName, "Nothing to do",true, false, null)
