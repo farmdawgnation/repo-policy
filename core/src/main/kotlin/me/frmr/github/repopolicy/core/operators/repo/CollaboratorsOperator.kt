@@ -26,28 +26,63 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
     val userCollaborators = associated[false]
     val teamCollaborators = associated[true]
 
+    var validationPassed = true
+    var validationErrored = false
+
     // Resolve teams
     if (teamCollaborators != null) {
       for (teamCollaborator in teamCollaborators) {
+        val ghOrg = github.getOrganization(teamCollaborator.org)
+        if (ghOrg == null) {
+          validationErrored = true
+          continue
+        }
+
+        val ghTeam = ghOrg.getTeamBySlug(teamCollaborator.name)
+        if (ghTeam == null) {
+          validationErrored = true
+          continue
+        }
+
+        val hasRepo = ghTeam.listRepositories().contains(target)
+
+        if (! hasRepo) {
+          validationPassed = false
+        }
       }
     }
 
-    val currentCollaboratorsSet = target.collaboratorNames
+    // Resolve users
+    if (userCollaborators != null) {
+      for (userCollaborator in userCollaborators) {
+        val ghUser = github.getUser(userCollaborator.name)
+        if (ghUser == null) {
+          validationErrored = true
+          continue
+        }
 
-    return if (currentCollaboratorsSet.containsAll(desiredCollaboratorsSet)) {
-      PolicyValidationResult(
-        subject = target.fullName,
-        description = "All desired collaborators are present",
-        passed = true
-      )
-    } else {
-      val missingCollaborators = desiredCollaboratorsSet - currentCollaboratorsSet
-      val descriptionStr = missingCollaborators.joinToString(", ")
-      PolicyValidationResult(
-        subject = target.fullName,
-        description = "The following collaborators are missing: $descriptionStr",
-        passed = false
-      )
+        val hasRepo = ghUser.listRepositories().contains(target)
+
+        if (! hasRepo) {
+          validationPassed = false
+        }
+      }
     }
+
+    var description = if (validationPassed) {
+      "All collaborators are present."
+    } else {
+      "Some collaborators were missing."
+    }
+
+    if (validationErrored) {
+      description += " Additionally, some teams or users could not be found."
+    }
+
+    return PolicyValidationResult(
+      subject = target.fullName,
+      description = description,
+      passed = validationPassed
+    )
   }
 }
