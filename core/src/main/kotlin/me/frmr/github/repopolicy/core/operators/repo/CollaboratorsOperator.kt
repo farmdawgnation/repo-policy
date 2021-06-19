@@ -44,7 +44,10 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
           continue
         }
 
-        val hasRepo = ghTeam.listRepositories().contains(target)
+        // This isn't the most efficient, but I can't get interacting with the
+        // iterator directly to work for tests.
+        val repoList = ghTeam.listRepositories().toList()
+        val hasRepo = repoList.contains(target)
 
         if (! hasRepo) {
           validationPassed = false
@@ -61,7 +64,10 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
           continue
         }
 
-        val hasRepo = ghUser.listRepositories().contains(target)
+        // This isn't the most efficient, but I can't get interacting with the
+        // iterator directly to work for tests.
+        val repoList = ghUser.listRepositories().toList()
+        val hasRepo = repoList.contains(target)
 
         if (! hasRepo) {
           validationPassed = false
