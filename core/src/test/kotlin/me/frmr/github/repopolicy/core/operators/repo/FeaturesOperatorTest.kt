@@ -22,6 +22,7 @@ class FeaturesOperatorTest {
   }
 
   fun runValidate(desiredIssues: Boolean?, currentIssues: Boolean, desiredProjects: Boolean?, currentProjects: Boolean, desiredWiki: Boolean?, currentWiki: Boolean): PolicyValidationResult {
+    val mockGithub = mockk<GitHub>()
     val sut = FeaturesOperator(desiredIssues, desiredProjects, desiredWiki)
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
 
@@ -37,7 +38,7 @@ class FeaturesOperatorTest {
       every { mockRepo.hasWiki() } returns currentWiki
     }
 
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGithub)
   }
 
   fun runEnforce(desiredIssues: Boolean?, currentIssues: Boolean, desiredProjects: Boolean?, currentProjects: Boolean, desiredWiki: Boolean?, currentWiki: Boolean): PolicyEnforcementResult {

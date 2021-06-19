@@ -32,13 +32,20 @@ data class PolicyRuleRepoFeatures(
 )
 
 @Serializable
+data class PolicyRuleRepoCollaborator(
+  val org: String? = null,
+  val name: String,
+  val permission: String
+)
+
+@Serializable
 data class PolicyRuleRepo(
   val license_key: String? = null,
   val delete_branch_on_merge: Boolean? = null,
   val visibility: String? = null,
   val features: PolicyRuleRepoFeatures? = null,
   val default_branch: String? = null,
-  val collaborators: List<String>? = null
+  val collaborators: List<PolicyRuleRepoCollaborator>? = null
 )
 
 @Serializable

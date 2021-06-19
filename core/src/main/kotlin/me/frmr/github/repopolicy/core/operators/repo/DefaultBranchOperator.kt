@@ -1,10 +1,9 @@
 package me.frmr.github.repopolicy.core.operators.repo
 
-import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
-import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 /**
  * Policy rule operator that validates the default branch. Does not enforce so
@@ -14,7 +13,7 @@ import org.kohsuke.github.GHRepository
 class DefaultBranchOperator(val defaultBranch: String): NonEnforcingOperator() {
   override val description: String = "Default branch name"
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     return if (target.defaultBranch == defaultBranch) {
       PolicyValidationResult(
         subject = target.fullName,

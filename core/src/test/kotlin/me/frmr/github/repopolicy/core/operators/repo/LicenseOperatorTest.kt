@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.kohsuke.github.GHLicense
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 @ExtendWith(MockKExtension::class)
 class LicenseOperatorTest {
@@ -21,12 +22,13 @@ class LicenseOperatorTest {
   }
 
   fun runValidate(desiredLicense: String, currentLicense: String): PolicyValidationResult {
+    val mockGithub = mockk<GitHub>()
     val sut = LicenseOperator(desiredLicense)
     val licenseMock = mockk<GHLicense>()
     every { mockRepo.license } returns licenseMock
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
     every { licenseMock.key } returns currentLicense
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGithub)
   }
 
   @Test

@@ -30,7 +30,9 @@ class PolicyEngineTest {
             wiki: false
           default_branch: main
           collaborators:
-          - OrgName/engineering-team
+          - name: engineering-team
+            org: MyOrg
+            permission: admin
         branches:
         - branch: main
           protection:

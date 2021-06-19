@@ -22,10 +22,11 @@ class DeleteBranchOnMergeOperatorTest {
   }
 
   fun runValidate(desired: Boolean, current: Boolean): PolicyValidationResult {
+    val mockGithub = mockk<GitHub>();
     val sut = DeleteBranchOnMergeOperator(desired)
     every { mockRepo.isDeleteBranchOnMerge } returns current
     every { mockRepo.fullName } returns "unit-tests/unit-tests"
-    return sut.validate(mockRepo)
+    return sut.validate(mockRepo, mockGithub)
   }
 
   fun runEnforce(desired: Boolean, current: Boolean): PolicyEnforcementResult {

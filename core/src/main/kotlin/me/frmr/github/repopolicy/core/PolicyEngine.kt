@@ -74,7 +74,7 @@ class PolicyEngine(val policy: PolicyDescription) {
           // Get the full repo — search results are abbreviated
           val fullRepo = githubClient.getRepository(repo.fullName)
           rule.operators.map { operator ->
-            operator.validate(fullRepo)
+            operator.validate(fullRepo, githubClient)
           }
         }
       }

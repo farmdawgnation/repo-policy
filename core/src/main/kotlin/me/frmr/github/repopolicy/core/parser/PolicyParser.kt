@@ -41,7 +41,9 @@ object PolicyParser {
 
     if (input?.collaborators != null) {
       resultingOperators.add(CollaboratorsOperator(
-        input.collaborators
+        input.collaborators.map { pdfc ->
+          CollaboratorsOperator.Companion.CollaboratorsDetail(pdfc.org, pdfc.name, pdfc.permission)
+        }
       ))
     }
 

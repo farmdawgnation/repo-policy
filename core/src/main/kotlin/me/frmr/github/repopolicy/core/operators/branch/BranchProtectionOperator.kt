@@ -26,7 +26,7 @@ class BranchProtectionOperator(
 ): PolicyRuleOperator {
   override val description: String = "Branch protection"
 
-  override fun validate(target: GHRepository): PolicyValidationResult {
+  override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
     val ghBranch = target.getBranch(branch)
       ?: return PolicyValidationResult(
         subject = target.fullName + "/" + branch,
@@ -158,7 +158,7 @@ class BranchProtectionOperator(
         policyEnforced = false
       )
 
-    val validationResult = validate(target)
+    val validationResult = validate(target, github)
 
     if (validationResult.passed) {
       return PolicyEnforcementResult(
