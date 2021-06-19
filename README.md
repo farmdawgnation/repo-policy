@@ -86,7 +86,13 @@ rules:
       vulnerability_alerts: true
     default_branch: main
     collaborators:
-    - OrgName/engineering-team
+    # Teams in an org
+    - org: OrgName
+      name: engineering-team
+      permission: admin
+    # Individuals!
+    - name: farmdawgnation
+      permission: admin
   branches:
   - branch: main
     protection:
