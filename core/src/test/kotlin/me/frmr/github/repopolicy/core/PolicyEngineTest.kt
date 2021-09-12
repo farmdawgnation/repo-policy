@@ -54,6 +54,6 @@ class PolicyEngineTest {
             - "farmdawgnation"
     """.trimIndent()
 
-    PolicyEngine(examplePolicy)
+    PolicyEngine(examplePolicy, false)
   }
 }

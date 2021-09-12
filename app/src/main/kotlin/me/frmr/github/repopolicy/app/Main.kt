@@ -28,16 +28,14 @@ class Main: Callable<Int> {
   lateinit var policyFile: Path;
 
   override fun call(): Int {
-    println("Parsing policy file...")
+    System.err.println("Parsing policy file...")
     val file = Files.readString(policyFile)
-    val engine = PolicyEngine(file)
+    val engine = PolicyEngine(file, true)
     engine.initGithubClient()
-
-    println(engine.policy)
 
     // Explicitly declared for clarity on what our
     // exit code means
-    println("Running policy engine...")
+    System.err.println("Running policy engine...")
     val fails = when (mode) {
       Mode.enforce -> ConsolePolicyEnforcementReporter.report(engine.enforce())
       Mode.validate -> ConsolePolicyValidationReporter.report(engine.validate())
