@@ -14,12 +14,12 @@ import org.kohsuke.github.PagedSearchIterable
  * reality matches the policy or makes changes to bring reality closer
  * to the policy.
  */
-class PolicyEngine(val policy: PolicyDescription) {
+class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
   private lateinit var githubClient: GitHub
 
-  constructor(dataFile: PolicyDataFile) : this(PolicyParser.parseDataFile(dataFile))
+  constructor(dataFile: PolicyDataFile, logging: Boolean) : this(PolicyParser.parseDataFile(dataFile), logging)
 
-  constructor(yaml: String): this(Yaml.default.decodeFromString(PolicyDataFile.serializer(), yaml))
+  constructor(yaml: String, logging: Boolean): this(Yaml.default.decodeFromString(PolicyDataFile.serializer(), yaml), logging)
 
   /**
    * Init the GitHub Client from environment variables. Specifically:
@@ -71,6 +71,9 @@ class PolicyEngine(val policy: PolicyDescription) {
         if (repo.isArchived) {
           emptyList()
         } else {
+          if (logging) {
+            System.err.println("Evaluating $logging...")
+          }
           // Get the full repo — search results are abbreviated
           val fullRepo = githubClient.getRepository(repo.fullName)
           rule.operators.map { operator ->
