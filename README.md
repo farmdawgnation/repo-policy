@@ -83,7 +83,6 @@ rules:
       issues: true
       projects: false
       wiki: false
-      vulnerability_alerts: true
     default_branch: main
     collaborators:
     # Teams in an org
