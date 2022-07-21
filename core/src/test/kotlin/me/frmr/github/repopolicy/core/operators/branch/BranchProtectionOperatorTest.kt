@@ -67,7 +67,7 @@ class BranchProtectionOperatorTest {
     val mockProtection = mockk<GHBranchProtection>()
 
     if (! branchExists) {
-      every { mockRepo.getBranch("unit-tests") } returns null
+      every { mockRepo.getBranch("unit-tests") } throws GHFileNotFoundException()
       return sut.validate(mockRepo, mockGithub)
     } else {
       every { mockRepo.getBranch("unit-tests") } returns mockBranch
