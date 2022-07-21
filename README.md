@@ -22,13 +22,13 @@ where you don't want to have the policy to have an opinion at all.
 ### JAR file
 You can download the latest JAR file from the releases page for each release.
 
-```shell
+```bash
 wget https://github.com/farmdawgnation/repo-policy/releases/download/vX.X.X/repo-policy-all.jar
 ```
 
 ### Docker
 Each release has a Docker image published. 
-```
+```bash
 docker pull docker pull ghcr.io/farmdawgnation/repo-policy:vX.X.X
 docker build -t repo-policy .
 ```
@@ -58,7 +58,7 @@ $ java -jar repo-policy-all.jar validate my-policy.yaml
 ```
 
 Example usage with Docker:
-```shell
+```bash
 docker run -i --rm \
     -e "GITHUB_OAUTH=ghp_XXXXXXXXXXXXXXXXXXXXXXXXX" \
     -v /path/to/policy/my-policy.yaml:/opt/my-policy.yaml \
@@ -74,7 +74,7 @@ $ java -jar repo-policy-all.jar enforce my-policy.yaml
 ```
 
 Example usage with Docker:
-```shell
+```bash
 docker run -i --rm \
     -e "GITHUB_OAUTH=ghp_XXXXXXXXXXXXXXXXXXXXXXXXX" \
     -v /path/to/policy/my-policy.yaml:/opt/my-policy.yaml \
@@ -93,7 +93,7 @@ The following is an example policy:
 # Some Policy metadata
 name: Example Policy
 version: 1.0
-author: Engineering Leaders <eng-leaders@example.org>
+author: Engineering Leaders <eng-leaders@example.or>
 # Rules associated with the policy
 rules:
 - org: ExampleOrg
