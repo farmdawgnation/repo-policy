@@ -17,9 +17,21 @@ where you don't want to have the policy to have an opinion at all.
 
 * Java 11 (AdoptOpenJDK 11 preferred)
 
-## Downloading
+## Installation
 
+### JAR file
 You can download the latest JAR file from the releases page for each release.
+
+```shell
+wget https://github.com/farmdawgnation/repo-policy/releases/download/vX.X.X/repo-policy-all.jar
+```
+
+### Docker
+Each release has a Docker image published. 
+```
+docker pull docker pull ghcr.io/farmdawgnation/repo-policy:vX.X.X
+docker build -t repo-policy .
+```
 
 ## Usage
 
@@ -28,7 +40,6 @@ variables. The following environment variables are needed:
 
 |Name           | Required | Description                              |
 |---------------|----------|------------------------------------------|
-|GITHUB_USERNAME|Y         |The username for the utility to run under.|
 |GITHUB_OAUTH   |Y         |The access token for the utility to use.  |
 |GITHUB_ENDPOINT|N         |API Endpoint to use if using Enterprise.  |
 
@@ -40,18 +51,34 @@ you want to make the changes to the repository.
 
 ### Validate Mode
 
-Usage for validate mode is as follows:
+Example usage for validate mode is as follows:
 
 ```bash
 $ java -jar repo-policy-all.jar validate my-policy.yaml
 ```
 
+Example usage with Docker:
+```shell
+docker run -i --rm \
+    -e "GITHUB_OAUTH=ghp_XXXXXXXXXXXXXXXXXXXXXXXXX" \
+    -v /path/to/policy/my-policy.yaml:/opt/my-policy.yaml \
+    repo-policy validate my-policy.yaml
+```
+
 ### Enforce mode
 
-Usage for enforce mode is as follows:
+Example usage for enforce mode is as follows:
 
 ```bash
 $ java -jar repo-policy-all.jar enforce my-policy.yaml
+```
+
+Example usage with Docker:
+```shell
+docker run -i --rm \
+    -e "GITHUB_OAUTH=ghp_XXXXXXXXXXXXXXXXXXXXXXXXX" \
+    -v /path/to/policy/my-policy.yaml:/opt/my-policy.yaml \
+    repo-policy enforce my-policy.yaml
 ```
 
 ## Policy Schema
