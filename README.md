@@ -93,7 +93,7 @@ The following is an example policy:
 # Some Policy metadata
 name: Example Policy
 version: 1.0
-author: Engineering Leaders <eng-leaders@example.or>
+author: Engineering Leaders <eng-leaders@example.org>
 # Rules associated with the policy
 rules:
 - org: ExampleOrg
