@@ -70,6 +70,8 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
         // Determine if the repo is archived, if so, skip it
         if (repo.isArchived) {
           emptyList()
+        } else if ( rule.subject.exclude != null && repo.name in rule.subject.exclude) {
+          emptyList()
         } else {
           if (logging) {
             System.err.println("Evaluating $logging...")

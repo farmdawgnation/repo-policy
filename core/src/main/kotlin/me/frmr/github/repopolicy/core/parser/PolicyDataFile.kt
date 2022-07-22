@@ -53,6 +53,7 @@ data class PolicyRule(
   val user: String? = null,
   val org: String? = null,
   val topic: String? = null,
+  val exclude: List<String>? = null,
   val repo: PolicyRuleRepo? = null,
   val branches: List<PolicyRuleBranch>? = null
 )

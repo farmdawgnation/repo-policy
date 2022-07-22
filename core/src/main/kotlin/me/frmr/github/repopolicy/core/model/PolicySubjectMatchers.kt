@@ -6,5 +6,6 @@ package me.frmr.github.repopolicy.core.model
 data class PolicySubjectMatchers(
   val user: String? = null,
   val org: String? = null,
-  val topic: String? = null
+  val topic: String? = null,
+  val exclude: List<String>? =  null
 )
