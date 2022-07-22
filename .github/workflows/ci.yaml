@@ -31,7 +31,6 @@ jobs:
     name: Upload Coverage
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.repository == "farmdawgnation/repo-policy" }} # only run on main repo
     
     steps:
     - name: Download coverage report
