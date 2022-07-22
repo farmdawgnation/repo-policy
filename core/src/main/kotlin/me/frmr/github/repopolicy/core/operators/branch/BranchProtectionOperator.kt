@@ -5,6 +5,7 @@ import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import org.kohsuke.github.GHFileNotFoundException
 
 /**
  * Policy rule operator for validating and enforcing branch protection.
@@ -27,12 +28,15 @@ class BranchProtectionOperator(
   override val description: String = "Branch protection"
 
   override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
-    val ghBranch = target.getBranch(branch)
-      ?: return PolicyValidationResult(
-        subject = target.fullName + "/" + branch,
-        description = "Branch does not exist",
-        passed = false
+    val ghBranch = try {
+      target.getBranch(branch)
+    } catch (e: GHFileNotFoundException) {
+      return PolicyValidationResult(
+              subject = target.fullName + "/" + branch,
+              description = "Branch does not exist",
+              passed = false
       )
+    }
 
     val isProtected = ghBranch.isProtected
     if (isProtected != enabled) {
@@ -150,13 +154,16 @@ class BranchProtectionOperator(
   }
 
   override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
-    val ghBranch = target.getBranch(branch)
-      ?: return PolicyEnforcementResult(
-        subject = target.fullName + "/" + branch,
-        description = "Branch does not exist",
-        passedValidation = false,
-        policyEnforced = false
+    val ghBranch = try {
+      target.getBranch(branch)
+    } catch (e: GHFileNotFoundException) {
+      return PolicyEnforcementResult(
+            subject = target.fullName + "/" + branch,
+            description = "Branch does not exist",
+            passedValidation = false,
+            policyEnforced = false
       )
+    }
 
     val validationResult = validate(target, github)
 
