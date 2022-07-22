@@ -22,7 +22,6 @@ object ConsolePolicyValidationReporter : PolicyValidationReporter {
         println("$prefix ${result.description}")
 
         if (! result.extra.isNullOrBlank()) {
-//          println("         " + result.extra)
           println("$prefix ${result.extra}")
         }
       }
