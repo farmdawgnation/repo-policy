@@ -88,7 +88,7 @@ object PolicyParser {
   }
 
   private fun parseRule(input: PolicyRule): ModelPolicyRule {
-    val subjectMatchers = PolicySubjectMatchers(user = input.user, topic = input.topic, org = input.org)
+    val subjectMatchers = PolicySubjectMatchers(user = input.user, topic = input.topic, org = input.org, exclude = input.exclude)
     val branchOperators: List<PolicyRuleOperator> = if (input.branches != null) {
       input.branches.flatMap { createBranchOperators(it) }
     } else {

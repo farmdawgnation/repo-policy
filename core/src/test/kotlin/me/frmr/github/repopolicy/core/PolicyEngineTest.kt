@@ -1,7 +1,6 @@
 package me.frmr.github.repopolicy.core
 
 import org.junit.jupiter.api.*
-import org.assertj.core.api.Assertions.*
 
 class PolicyEngineTest {
   @Test
@@ -20,6 +19,10 @@ class PolicyEngineTest {
         # and branch settings. You can omit the topic parameter or set
         # it to null to have this apply to all repositories owned by a
         # particular owner.
+        exclude:
+        - 'excluded-repo'
+        # To exclude individual repositories from the policy, add the
+        # name of the repository to this exclude list.
         repo:
           license_key: mit
           delete_branch_on_merge: true
