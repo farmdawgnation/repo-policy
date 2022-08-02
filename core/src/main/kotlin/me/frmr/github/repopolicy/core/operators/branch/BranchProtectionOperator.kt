@@ -177,7 +177,11 @@ class BranchProtectionOperator(
     }
 
     // Disable protection on this branch first
-    ghBranch.disableProtection()
+    try {
+      ghBranch.disableProtection()
+    } catch (e: GHFileNotFoundException) {
+      null
+    }
 
     // Rebuild protection based on the policy
     var protectionBuilder = ghBranch.enableProtection()
