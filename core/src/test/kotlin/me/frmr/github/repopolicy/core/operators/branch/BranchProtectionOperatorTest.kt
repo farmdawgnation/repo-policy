@@ -372,7 +372,7 @@ class BranchProtectionOperatorTest {
   }
 
   @Test
-  fun failsOnRequiredReviewCountMismatch() {
+  fun failsOnRequiredReviewCountIsLessThanDesired() {
     val result1 = runValidate(
       desiredEnabled = true,
       currentEnabled = true,
@@ -396,6 +396,17 @@ class BranchProtectionOperatorTest {
     assertThat(result1.passed).isTrue
   }
 
+  @Test
+  fun passesOnRequiredReviewCountIsGreaterThanDesired() {
+    val result1 = runValidate(
+            desiredEnabled = true,
+            currentEnabled = true,
+            desiredRequiredReviewCount = 1,
+            currentRequiredReviewCount = 2,
+    )
+
+    assertThat(result1.passed).isTrue
+  }
   @Test
   fun failsOnRestrictReviewDismissalsMismatch() {
     val result1 = runValidate(
