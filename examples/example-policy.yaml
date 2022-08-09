@@ -12,7 +12,7 @@ rules:
   # it to null to have this apply to all repositories owned by a
   # particular owner.
   exclude:
-    - 'excluded-repo'
+  - 'excluded-repo'
   # To exclude individual repositories from the policy, add the
   # name of the repository to this exclude list.
   repo:

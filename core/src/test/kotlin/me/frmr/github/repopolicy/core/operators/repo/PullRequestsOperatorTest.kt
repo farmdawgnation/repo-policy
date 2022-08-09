@@ -169,5 +169,4 @@ class PullRequestsOperatorTest {
     assertThat(result.policyEnforced).isFalse
     assertThat(result.description).isEqualTo("Pull Request settings match policy")
   }
-
 }
