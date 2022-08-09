@@ -39,13 +39,21 @@ data class PolicyRuleRepoCollaborator(
 )
 
 @Serializable
+data class PolicyRuleRepoPullRequests(
+        val allow_merge_commit: Boolean? = null,
+        val allow_squash_merge: Boolean? = null,
+        val allow_rebase_merge: Boolean? = null
+)
+
+@Serializable
 data class PolicyRuleRepo(
   val license_key: String? = null,
   val delete_branch_on_merge: Boolean? = null,
   val visibility: String? = null,
   val features: PolicyRuleRepoFeatures? = null,
   val default_branch: String? = null,
-  val collaborators: List<PolicyRuleRepoCollaborator>? = null
+  val collaborators: List<PolicyRuleRepoCollaborator>? = null,
+  val pull_requests: PolicyRuleRepoPullRequests? = null
 )
 
 @Serializable

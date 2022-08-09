@@ -31,6 +31,10 @@ class PolicyEngineTest {
             issues: true
             projects: false
             wiki: false
+          pull_requests:
+            allow_merge_commit: true
+            allow_squash_merge: true
+            allow_rebase_merge: true
           default_branch: main
           collaborators:
           - name: engineering-team

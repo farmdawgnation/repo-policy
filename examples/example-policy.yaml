@@ -12,7 +12,7 @@ rules:
   # it to null to have this apply to all repositories owned by a
   # particular owner.
   exclude:
-  - 'excluded-repo'
+    - 'excluded-repo'
   # To exclude individual repositories from the policy, add the
   # name of the repository to this exclude list.
   repo:
@@ -23,10 +23,15 @@ rules:
       issues: true
       projects: false
       wiki: false
-      vulnerability_alerts: true
+    pull_requests:
+      allow_merge_commit: true
+      allow_squash_merge: true
+      allow_rebase_merge: true
     default_branch: main
     collaborators:
-    - OrgName/engineering-team
+    - name: engineering-team
+      org: MyOrg
+      permission: admin
   branches:
   - branch: main
     protection:

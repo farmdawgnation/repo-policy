@@ -19,6 +19,14 @@ object PolicyParser {
       resultingOperators.add(LicenseOperator(input.license_key))
     }
 
+    if (input?.pull_requests != null) {
+      resultingOperators.add(PullRequestsOperator(
+              allowMergeCommitEnabled = input.pull_requests.allow_squash_merge,
+              allowSquashMergeEnabled = input.pull_requests.allow_merge_commit,
+              allowRebaseMergeEnabled = input.pull_requests.allow_rebase_merge
+      ))
+    }
+
     if (input?.delete_branch_on_merge != null) {
       resultingOperators.add(DeleteBranchOnMergeOperator(input.delete_branch_on_merge))
     }
