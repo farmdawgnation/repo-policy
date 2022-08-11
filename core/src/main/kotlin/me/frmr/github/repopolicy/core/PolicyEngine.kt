@@ -11,7 +11,7 @@ import org.kohsuke.github.*
 import java.security.Key
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
-import java.util.*
+import java.util.Date
 
 
 /**
