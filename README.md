@@ -34,20 +34,47 @@ docker build -t repo-policy .
 ```
 
 ## Usage
+If you're running as a part of an
+automated process it is **STRONGLY** recommended to run that action in
+the validate mode and only use enforce for those cases where you know
+you want to make the changes to the repository.
+
+### Authentication
 
 The Repo Policy Utility requires GitHub authentication to be set in environment
-variables. The following environment variables are needed:
+variables. There are two options: 1) Authenticating via OAuth or 2) Authenticating as a GitHub App
+
+#### OAuth
+
+To authenticate via OAuth, define the following environment variables:
 
 |Name           | Required | Description                              |
 |---------------|----------|------------------------------------------|
 |GITHUB_OAUTH   |Y         |The access token for the utility to use.  |
 |GITHUB_ENDPOINT|N         |API Endpoint to use if using Enterprise.  |
 
-With these environment variables defined you can run the utility in either
-**validate mode** or **enforce mode**. If you're running as a part of an
-automated process it is **STRONGLY** recommended to run that action in
-the validate mode and only use enforce for those cases where you know
-you want to make the changes to the repository.
+#### GitHub App
+
+Create and Install a GitHub app
+
+1. Create a GitHub app in your organization.
+2. Install the app into the GitHub organization.
+3. Generate a private key.
+4. Convert the private key to DER format and Base64 encode.
+    ```shell
+    openssl pkcs8 -topk8 -inform PEM -outform DER -in PATH_TO_PEM_FILE -out PATH_TO_DER_FILE -nocrypt
+    base64 PATH_TO_DER_FILE
+    ```
+
+To authenticate as a GitHub App, define the following environment variables:
+
+| Name                        | Required | Description                                       |
+|-----------------------------|----------|---------------------------------------------------|
+| GITHUB_APP_KEY              |Y         | App private key in DER format, BASE64 encoded.    |
+| GITHUB_APP_ID               |Y         | GitHub app ID.                                    |
+| GITHUB_APP_INSTALLATION_ORG |Y         | The organization name where the app is installed. |
+| GITHUB_ENDPOINT             |N         | API Endpoint to use if using Enterprise.          |
+
 
 ### Validate Mode
 
