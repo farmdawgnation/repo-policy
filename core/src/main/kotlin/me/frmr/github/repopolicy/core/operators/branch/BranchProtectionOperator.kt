@@ -92,7 +92,7 @@ class BranchProtectionOperator(
         }
       }
 
-      if (requiredReviewCount != null && protectionDetails.requiredReviews?.requiredReviewers!! < requiredReviewCount) {
+      if (requiredReviewCount != null && protectionDetails.requiredReviews?.requiredReviewers != null && protectionDetails.requiredReviews?.requiredReviewers!! < requiredReviewCount) {
         val currentRequiredReviewers = protectionDetails.requiredReviews?.requiredReviewers
         problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
       }
