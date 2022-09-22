@@ -69,24 +69,29 @@ class PullRequestsOperator(
               policyEnforced = false
       )
     } else {
-      if (allowMergeCommitEnabled != null) {
+      if (allowSquashMergeEnabled != null && allowRebaseMergeEnabled != null && allowMergeCommitEnabled != null) {
+        target.allowMergeCommit(true)
+        target.allowSquashMerge(true)
+        target.allowRebaseMerge(true)
+
         target.allowMergeCommit(allowMergeCommitEnabled)
-      }
-
-      if (allowSquashMergeEnabled != null) {
         target.allowSquashMerge(allowSquashMergeEnabled)
-      }
-
-      if (allowRebaseMergeEnabled != null) {
         target.allowRebaseMerge(allowRebaseMergeEnabled)
-      }
 
-      return PolicyEnforcementResult(
+        return PolicyEnforcementResult(
               subject = target.fullName,
               description = "Pull Request settings updated",
               passedValidation = false,
               policyEnforced = true
-      )
+        )
+      } else {
+        return PolicyEnforcementResult(
+              subject = target.fullName,
+              description = "Pull Request settings not updated. To update, include values for allow_merge_commit, allow_squash_merge, and allow_rebase_merge.",
+              passedValidation = false,
+              policyEnforced = false
+        )
+      }
     }
   }
 }
