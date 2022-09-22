@@ -113,7 +113,7 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
           emptyList()
         } else {
           if (logging) {
-            System.err.println("Evaluating $logging...")
+            System.err.println("Evaluating ${repo.name}...")
           }
           // Get the full repo — search results are abbreviated
           val fullRepo = githubClient.getRepository(repo.fullName)
@@ -135,7 +135,12 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
         // Determine if the repo is archived, if so, skip it
         if (repo.isArchived) {
           emptyList()
+        } else if (rule.subject.exclude != null && repo.name in rule.subject.exclude) {
+          emptyList()
         } else {
+          if (logging) {
+            System.err.println("Evaluating ${repo.name}...")
+          }
           rule.operators.map { operator ->
             operator.enforce(repo, this.githubClient)
           }
