@@ -49,11 +49,11 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
       // Authenticating as an installation via App Installation Token
       // https://github-api.kohsuke.org/githubappappinsttokenauth.html
       val appInstallation: GHAppInstallation = jwtGithubClient.getApp().getInstallationByOrganization(System.getenv("GITHUB_APP_INSTALLATION_ORG")) // Installation Id
-      val appInstallationToken  = appInstallation.createToken().create()
+      val appInstallationToken  = appInstallation.createToken().create().token
 
       this.appInstallationTokenTtl = System.currentTimeMillis() + 3540000 // refresh in 59 minutes
 
-      this.githubClient = GitHubBuilder().withAppInstallationToken(appInstallationToken.token).build()
+      this.githubClient = GitHubBuilder().withAppInstallationToken(appInstallationToken).build()
     }
   }
 
