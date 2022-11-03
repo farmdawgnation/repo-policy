@@ -22,12 +22,12 @@ class PullRequestsOperatorTest {
   }
 
   fun runValidate(
-          desiredAllowMergeCommit: Boolean?,
-          currentAllowMergeCommit: Boolean,
-          desiredAllowSquashMerge: Boolean?,
-          currentAllowSquashMerge: Boolean,
-          desiredAllowRebaseMerge: Boolean?,
-          currentAllowRebaseMerge: Boolean
+    desiredAllowMergeCommit: Boolean?,
+    currentAllowMergeCommit: Boolean,
+    desiredAllowSquashMerge: Boolean?,
+    currentAllowSquashMerge: Boolean,
+    desiredAllowRebaseMerge: Boolean?,
+    currentAllowRebaseMerge: Boolean
   ): PolicyValidationResult {
     val mockGithub = mockk<GitHub>()
     val sut = PullRequestsOperator(desiredAllowMergeCommit, desiredAllowSquashMerge, desiredAllowRebaseMerge)
@@ -49,12 +49,12 @@ class PullRequestsOperatorTest {
   }
 
   fun runEnforce(
-          desiredAllowMergeCommit: Boolean?,
-          currentAllowMergeCommit: Boolean,
-          desiredAllowSquashMerge: Boolean?,
-          currentAllowSquashMerge: Boolean,
-          desiredAllowRebaseMerge: Boolean?,
-          currentAllowRebaseMerge: Boolean
+    desiredAllowMergeCommit: Boolean?,
+    currentAllowMergeCommit: Boolean,
+    desiredAllowSquashMerge: Boolean?,
+    currentAllowSquashMerge: Boolean,
+    desiredAllowRebaseMerge: Boolean?,
+    currentAllowRebaseMerge: Boolean
   ): PolicyEnforcementResult {
     val mockGithub = mockk<GitHub>()
     val sut = PullRequestsOperator(desiredAllowMergeCommit, desiredAllowSquashMerge, desiredAllowRebaseMerge)
@@ -168,5 +168,37 @@ class PullRequestsOperatorTest {
     assertThat(result.passedValidation).isTrue
     assertThat(result.policyEnforced).isFalse
     assertThat(result.description).isEqualTo("Pull Request settings match policy")
+  }
+
+  @Test
+  fun enforcementFailsWhenPartialMatch() {
+    val result = runEnforce(
+      null,
+      false,
+      true,
+      false,
+      true,
+      true
+    )
+
+    assertThat(result.passedValidation).isFalse
+    assertThat(result.policyEnforced).isFalse
+    assertThat(result.description).isEqualTo("Pull Request settings not updated. To update, set values for allow_merge_commit, allow_squash_merge, and allow_rebase_merge, and at least one must be enabled.")
+  }
+
+  @Test
+  fun enforcementFailsWhenAllSettingsFalse() {
+    val result = runEnforce(
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    )
+
+    assertThat(result.passedValidation).isFalse
+    assertThat(result.policyEnforced).isFalse
+    assertThat(result.description).isEqualTo("Pull Request settings not updated. To update, set values for allow_merge_commit, allow_squash_merge, and allow_rebase_merge, and at least one must be enabled.")
   }
 }
