@@ -92,9 +92,14 @@ class BranchProtectionOperator(
         }
       }
 
-      if (requiredReviewCount != null && protectionDetails.requiredReviews?.requiredReviewers != null && protectionDetails.requiredReviews?.requiredReviewers!! < requiredReviewCount) {
+      if (requiredReviewCount != null) {
         val currentRequiredReviewers = protectionDetails.requiredReviews?.requiredReviewers
-        problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
+        if(currentRequiredReviewers == null) {
+          problems.add("Required reviews missing, should require $requiredReviewCount")
+        }
+        if(currentRequiredReviewers != null && currentRequiredReviewers < requiredReviewCount) {
+          problems.add("Requires $currentRequiredReviewers reviews, should require $requiredReviewCount")
+        }
       }
 
       if (restrictReviewDismissals != null) {
