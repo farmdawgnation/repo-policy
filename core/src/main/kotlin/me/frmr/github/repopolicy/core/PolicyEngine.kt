@@ -26,7 +26,10 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
 
   constructor(dataFile: PolicyDataFile, logging: Boolean) : this(PolicyParser.parseDataFile(dataFile), logging)
 
-  constructor(yaml: String, logging: Boolean): this(Yaml.default.decodeFromString(PolicyDataFile.serializer(), yaml), logging)
+  constructor(yaml: String, logging: Boolean) : this(
+    Yaml.default.decodeFromString(PolicyDataFile.serializer(), yaml),
+    logging
+  )
 
   /**
    * Init the GitHub Client from environment variables. Specifically:
@@ -48,8 +51,9 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
 
       // Authenticating as an installation via App Installation Token
       // https://github-api.kohsuke.org/githubappappinsttokenauth.html
-      val appInstallation: GHAppInstallation = jwtGithubClient.getApp().getInstallationByOrganization(System.getenv("GITHUB_APP_INSTALLATION_ORG")) // Installation Id
-      val appInstallationToken  = appInstallation.createToken().create().token
+      val appInstallation: GHAppInstallation = jwtGithubClient.app
+        .getInstallationByOrganization(System.getenv("GITHUB_APP_INSTALLATION_ORG")) // Installation Id
+      val appInstallationToken = appInstallation.createToken().create().token
 
       this.appInstallationTokenTtl = System.currentTimeMillis() + 3540000 // refresh in 59 minutes
 
@@ -76,14 +80,21 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
     val expiration = Date(ttlMillis)
 
     return Jwts.builder()
-            .setIssuedAt(issuedAt)
-            .setIssuer(System.getenv("GITHUB_APP_ID")) // use the GitHub App's ID as the value for the JWT issuer claim
-            .signWith(signingKey, signatureAlgorithm)
-            .setExpiration(expiration)
-            .compact()
+      .setIssuedAt(issuedAt)
+      .setIssuer(System.getenv("GITHUB_APP_ID")) // use the GitHub App's ID as the value for the JWT issuer claim
+      .signWith(signingKey, signatureAlgorithm)
+      .setExpiration(expiration)
+      .compact()
   }
 
-  private fun findMatchingRepos(subject: PolicySubjectMatchers): List<GHRepository>? {
+  private fun refreshAppToken() {
+    // refresh app installation token if necessary
+    if (this.appInstallationTokenTtl > 0 && this.appInstallationTokenTtl < System.currentTimeMillis()) {
+      initGithubClient()
+    }
+  }
+
+  private fun findMatchingRepos(subject: PolicySubjectMatchers): List<GHRepository> {
     val searchRequest = githubClient.searchRepositories()
 
     var q = ""
@@ -108,12 +119,10 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
    */
   fun validate(): List<PolicyValidationResult> {
     return policy.rules.flatMap { rule ->
-      val repos = findMatchingRepos(rule.subject) ?: emptyList()
+      val repos = findMatchingRepos(rule.subject)
       repos.flatMap { repo ->
         // refresh app installation token if necessary
-        if (this.appInstallationTokenTtl > 0 && this.appInstallationTokenTtl < System.currentTimeMillis()) {
-          initGithubClient()
-        }
+        refreshAppToken()
 
         // Determine if the repo is archived, if so, skip it
         if (repo.isArchived) {
@@ -139,12 +148,11 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
    */
   fun enforce(): List<PolicyEnforcementResult> {
     return policy.rules.flatMap { rule ->
-      val repos = findMatchingRepos(rule.subject) ?: emptyList()
+      val repos = findMatchingRepos(rule.subject)
       repos.flatMap { repo ->
         // refresh app installation token if necessary
-        if (this.appInstallationTokenTtl > 0 && this.appInstallationTokenTtl < System.currentTimeMillis()) {
-          initGithubClient()
-        }
+        refreshAppToken()
+
         // Determine if the repo is archived, if so, skip it
         if (repo.isArchived) {
           emptyList()
