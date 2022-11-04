@@ -21,8 +21,8 @@ object PolicyParser {
 
     if (input?.pull_requests != null) {
       resultingOperators.add(PullRequestsOperator(
-              allowMergeCommitEnabled = input.pull_requests.allow_squash_merge,
-              allowSquashMergeEnabled = input.pull_requests.allow_merge_commit,
+              allowMergeCommitEnabled = input.pull_requests.allow_merge_commit,
+              allowSquashMergeEnabled = input.pull_requests.allow_squash_merge,
               allowRebaseMergeEnabled = input.pull_requests.allow_rebase_merge
       ))
     }
