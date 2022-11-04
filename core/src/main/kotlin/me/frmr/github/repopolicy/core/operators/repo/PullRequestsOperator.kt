@@ -92,6 +92,11 @@ class PullRequestsOperator(
         allowMergeCommitEnabled != null &&
         listOf(allowSquashMergeEnabled, allowRebaseMergeEnabled, allowMergeCommitEnabled).any { it }
       ) {
+        // set all to true first to account for race condition
+        target.allowMergeCommit(true)
+        target.allowSquashMerge(true)
+        target.allowRebaseMerge(true)
+
         target.allowMergeCommit(allowMergeCommitEnabled)
         target.allowSquashMerge(allowSquashMergeEnabled)
         target.allowRebaseMerge(allowRebaseMergeEnabled)
