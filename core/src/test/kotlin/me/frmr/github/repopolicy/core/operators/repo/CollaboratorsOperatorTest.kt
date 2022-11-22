@@ -23,14 +23,14 @@ class CollaboratorsOperatorTest {
     clearMocks(mockRepo, mockGithub)
   }
 
-  fun runValidate(desiredCollaborators: Set<CollaboratorsDetail>, currentCollaborators: Set<CollaboratorsDetail>): PolicyValidationResult {
+  private fun runValidate(desiredCollaborators: Set<CollaboratorsDetail>, currentCollaborators: Set<CollaboratorsDetail>): PolicyValidationResult {
     val allConstructs = desiredCollaborators + currentCollaborators
     val mockOrgs = mutableMapOf<String, GHOrganization>()
     for (currentCollaborator in allConstructs) {
       if (currentCollaborator.org != null) {
         // it's a team
-        val mockOrg = mockOrgs.getOrPut(currentCollaborator.org!!) { mockk<GHOrganization>() }
-        val mockTeam = mockk<GHTeam>()
+        val mockOrg = mockOrgs.getOrPut(currentCollaborator.org!!) { mockk() }
+        val mockTeam = mockk<GHTeam>(relaxed = true)
         val resultList = if (currentCollaborators.contains(currentCollaborator)) {
           listOf(mockRepo)
         } else {
