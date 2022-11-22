@@ -1,31 +1,34 @@
 package me.frmr.github.repopolicy.core.operators.repo
 
 import me.frmr.github.repopolicy.core.model.PolicyValidationResult
-import me.frmr.github.repopolicy.core.operators.NonEnforcingOperator
+import me.frmr.github.repopolicy.core.model.PolicyRuleOperator
+import me.frmr.github.repopolicy.core.model.PolicyEnforcementResult
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import org.kohsuke.github.GHOrganization
+import org.kohsuke.github.GHUser
 
 /**
  * Policy rule operator that validates that all collaborators requested are present
  * on the repository. This does not have an enforce mode.
  */
-class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): NonEnforcingOperator() {
+class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>) : PolicyRuleOperator {
   companion object {
     /** Holder for details on collaborators **/
     data class CollaboratorsDetail(val org: String?, val name: String, val permission: String) {
       /** Determine if the collaborator reference is a team **/
-      val isTeam = ! org.isNullOrEmpty()
+      val isTeam = !org.isNullOrEmpty()
     }
   }
 
   override val description: String = "Collaborators"
   private val desiredCollaboratorsSet = desiredCollaborators.toSet()
+  private val associated = this.desiredCollaboratorsSet.groupBy { it.isTeam }
+  private val userCollaborators = associated[false]
+  private val teamCollaborators = associated[true]
+  private val desiredCollaboratorsMap: Map<GHOrganization.Permission, List<GHUser>> = mapOf()
 
   override fun validate(target: GHRepository, github: GitHub): PolicyValidationResult {
-    val associated = this.desiredCollaboratorsSet.groupBy { it.isTeam }
-    val userCollaborators = associated[false]
-    val teamCollaborators = associated[true]
-
     var validationPassed = true
     var validationErrored = false
 
@@ -49,9 +52,11 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
         val repoList = ghTeam.listRepositories().toList()
         val hasRepo = repoList.contains(target)
 
-        if (! hasRepo) {
+        if (!hasRepo) {
           validationPassed = false
         }
+
+        desiredCollaboratorsMap.put()
       }
     }
 
@@ -69,7 +74,7 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
         val repoList = ghUser.listRepositories().toList()
         val hasRepo = repoList.contains(target)
 
-        if (! hasRepo) {
+        if (!hasRepo) {
           validationPassed = false
         }
       }
@@ -90,5 +95,35 @@ class CollaboratorsOperator(desiredCollaborators: List<CollaboratorsDetail>): No
       description = description,
       passed = validationPassed
     )
+  }
+
+  override fun enforce(target: GHRepository, github: GitHub): PolicyEnforcementResult {
+    val validationResult = validate(target, github)
+
+    return if (validationResult.passed) {
+      PolicyEnforcementResult(
+        subject = target.fullName,
+        description = validationResult.description,
+        passedValidation = true,
+        policyEnforced = false
+      )
+    } else {
+      //todo map permissions
+      if (userCollaborators != null) {
+        for (userCollaborator in userCollaborators) {
+          print(userCollaborator)
+        }
+      }
+
+      // todo add collaborators
+      target.addCollaborators()
+
+      PolicyEnforcementResult(
+        subject = target.fullName,
+        description = "Collaborators updated",
+        passedValidation = false,
+        policyEnforced = true
+      )
+    }
   }
 }
