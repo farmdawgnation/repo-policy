@@ -55,7 +55,7 @@ class PolicyEngine(val policy: PolicyDescription, val logging: Boolean) {
         .getInstallationByOrganization(System.getenv("GITHUB_APP_INSTALLATION_ORG")) // Installation Id
       val appInstallationToken = appInstallation.createToken().create().token
 
-      this.appInstallationTokenTtl = System.currentTimeMillis() + 3540000 // refresh in 59 minutes
+      this.appInstallationTokenTtl = System.currentTimeMillis() + 270000 // refresh in 45 minutes
 
       this.githubClient = GitHubBuilder().withAppInstallationToken(appInstallationToken).build()
     }
